@@ -169,8 +169,8 @@ html.anim [data-pop].in{opacity:1;transform:none}
   <form id="form" novalidate></form>
 
   <div class="actions">
+    <button type="button" class="btn btn-ghost" id="copy">Guardar y continuar más tarde</button>
     <button type="button" class="btn btn-primary" id="save">Enviar respuestas</button>
-    <button type="button" class="btn btn-ghost" id="copy">Copiar respuestas</button>
     <p class="status" id="status">Cuando termines, pulsa «Enviar respuestas».</p>
   </div>
 
@@ -354,37 +354,18 @@ form.addEventListener("input", e => {
 fill(readDraft());
 updateProgress();
 
-// Texto plano para copiar
-function asText() {
-  const a = collect();
-  let out = "CUESTIONARIO INICIAL\n";
-  SECTIONS.forEach(([title]) => {
-    out += "\n" + title.toUpperCase() + "\n";
-    QUESTIONS.filter(q => q.section === title).forEach(q => {
-      out += q.local + ". " + q.text + "\n" + (a[q.id] || "—") + "\n";
-    });
-  });
-  return out;
-}
-copyBtn.addEventListener("click", async () => {
-  const text = asText();
-  try {
-    await navigator.clipboard.writeText(text);
-    setStatus("Respuestas copiadas. Puedes pegarlas en un mensaje o un correo.", "ok");
-  } catch (e) {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.append(ta);
-    ta.select();
-    let ok = false;
-    try { ok = document.execCommand("copy"); } catch (_) {}
-    ta.remove();
-    setStatus(ok ? "Respuestas copiadas. Puedes pegarlas en un mensaje o un correo." : "No se han podido copiar. Selecciona el texto de cada respuesta y cópialo a mano.", ok ? "ok" : "err");
+// Guardar: deja las respuestas guardadas en este móvil para seguir más tarde
+copyBtn.addEventListener("click", () => {
+  let ok = true;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collect())); } catch (e) { ok = false; }
+  if (ok) {
+    setStatus("Guardado. Puedes cerrar la página y seguir más tarde desde este mismo móvil y navegador.", "ok");
+    copyBtn.textContent = "Guardado ✓";
+    setTimeout(() => { copyBtn.textContent = "Guardar y continuar más tarde"; }, 3000);
+  } else {
+    setStatus("Este navegador no permite guardar (¿modo privado?). Termina el cuestionario y pulsa «Enviar respuestas».", "err");
   }
 });
-
 
 // Intro + pop up (solo si el script corre; sin JS todo se ve quieto)
 (function motion() {
@@ -455,7 +436,7 @@ saveBtn.addEventListener("click", async () => {
     saveBtn.textContent = "Enviado ✓";
     setTimeout(() => { saveBtn.textContent = "Enviar respuestas"; }, 4000);
   } catch (e) {
-    setStatus("No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo, o pulsa «Copiar respuestas» y mándamelas por WhatsApp.", "err");
+    setStatus("No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo. Tus respuestas siguen guardadas en este móvil.", "err");
   } finally {
     sending = false;
     saveBtn.disabled = false;
