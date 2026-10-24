@@ -429,29 +429,39 @@ copyBtn.addEventListener("click", async () => {
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go, go);
 })();
 
-// Envío por correo: abre la app de correo de Marta con las respuestas ya escritas
-const DESTINO = "olaiatsgar@gmail.com";
-function hhmm(d) {
-  try { return d.toLocaleString("es-ES", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
-  catch (e) { return ""; }
-}
-saveBtn.addEventListener("click", () => {
+// Envío: la web manda las respuestas a un receptor (Google Apps Script de Olaia) que se las reenvía por correo
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwv5vX5hvA3thbcj0tgdc6VJHZeROzSMNSgvmKx2Qlx9r3zEasJvPLO6Hw7wUIfzate/exec";
+let sending = false;
+saveBtn.addEventListener("click", async () => {
+  if (sending) return;
   const done = updateProgress();
   if (done === 0) {
     setStatus("Todavía no has respondido ninguna pregunta.", "err");
     return;
   }
   writeDraft();
-  const asunto = "Cuestionario inicial · respuestas (" + done + "/" + TOTAL + ")";
-  let cuerpo = asText();
-  // algunos móviles cortan enlaces muy largos: se recorta con aviso
-  const MAX = 7000;
-  if (cuerpo.length > MAX) cuerpo = cuerpo.slice(0, MAX) + "\n\n[Texto recortado por longitud: pulsa «Copiar respuestas» y pégalo aquí debajo]";
-  const url = "mailto:" + DESTINO + "?subject=" + encodeURIComponent(asunto) + "&body=" + encodeURIComponent(cuerpo);
-  window.location.href = url;
-  setStatus("Se ha abierto tu correo con las respuestas. Pulsa «Enviar» allí para que me lleguen. Si no se ha abierto, pulsa «Copiar respuestas» y mándamelas a " + DESTINO + ".", "ok");
+  const a = collect();
+  const payload = {
+    origen: "cuestionario-inicial",
+    respuestas: QUESTIONS.map(q => ({ bloque: q.section, n: q.local, pregunta: q.text, respuesta: a[q.id] || "" }))
+  };
+  sending = true;
+  saveBtn.disabled = true;
+  setStatus("Enviando…");
+  try {
+    // text/plain evita la comprobación previa del navegador; la respuesta no se puede leer (no-cors)
+    await fetch(ENDPOINT, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+    setStatus("¡Enviado! Muchas gracias. Si quieres cambiar algo, edítalo y vuelve a enviar.", "ok");
+    saveBtn.textContent = "Enviado ✓";
+    setTimeout(() => { saveBtn.textContent = "Enviar respuestas"; }, 4000);
+  } catch (e) {
+    setStatus("No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo, o pulsa «Copiar respuestas» y mándamelas por WhatsApp.", "err");
+  } finally {
+    sending = false;
+    saveBtn.disabled = false;
+  }
 });
-setStatus("Cuando termines, pulsa «Enviar respuestas»: se abrirá tu correo con todo ya escrito. Lo que escribes se guarda en este móvil aunque cierres la página.");
+setStatus("Cuando termines, pulsa «Enviar respuestas». Lo que escribes se guarda en este móvil aunque cierres la página.");
 </script>
 
 </body>
