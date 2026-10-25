@@ -2,8 +2,17 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Plan de Marta</title>
+<!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FCF2F3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plan Marta">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poppins:ital,wght@0,300;0,400;0,500;1,300&display=swap">
@@ -228,6 +237,13 @@ body.sum-on{overflow:hidden}
 .empty{font-size:14px;color:var(--text-faint);font-style:italic;margin:0;padding-top:12px;border-top:1px dashed var(--border-strong)}
 
 .legend{padding-block:8px 96px}
+.install{display:flex;align-items:center;gap:12px;margin:0 0 20px;padding:12px 12px 12px 16px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:16px;box-shadow:var(--shadow-sm)}
+.install[hidden]{display:none}
+.install__txt{flex:1;min-width:0;display:flex;flex-direction:column;font-size:13px;color:var(--text-dim);line-height:1.45}
+.install__txt b{font-weight:500;color:var(--ink);font-size:14px}
+.install__btn{flex:none;font-size:13px;font-weight:500;color:var(--cream);background:var(--gradient);border-radius:999px;padding:8px 14px}
+.install__x{flex:none;width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;color:var(--text-dim)}
+.install__x:hover{background:var(--bg-deep)}
 .send{padding-block:0 24px}
 .send__card{background:#F9E6E9;border:1px solid #EFD3D8;border-radius:20px;box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:12px}
 .send__card h2{font-size:20px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;margin:0}
@@ -290,6 +306,12 @@ html.anim [data-pop].in{opacity:1;transform:none}
   <h1><span class="ln" data-pop><span>Plan de</span> <span class="script nm">Marta</span><br><span>entrenamiento</span></span></h1>
   <p class="sub" data-pop style="--d:.26s"><span class="sub__rule" aria-hidden="true"></span>Registro de entrenamiento</p>
 </header>
+
+<div class="wrap"><div class="install" id="install" hidden>
+  <div class="install__txt"><b>Instálala como app</b><span id="installHow"></span></div>
+  <button type="button" class="install__btn" id="installBtn" hidden>Instalar</button>
+  <button type="button" class="install__x" id="installX" aria-label="Cerrar aviso">×</button>
+</div></div>
 
 <nav class="months" aria-label="Meses">
   <div class="wrap months__row">
@@ -769,23 +791,29 @@ html.anim [data-pop].in{opacity:1;transform:none}
   var sendBtn = document.getElementById('send'), sendSt = document.getElementById('sendStatus'), sending = false;
   function setSt(t,c){ sendSt.textContent = t; sendSt.className = 'send__status'+(c?' '+c:''); }
   if (store._sent) setSt('Último envío: '+store._sent+'.');
-  sendBtn.addEventListener('click', function(){
+  if (store._pending) setSt('Hay avances pendientes de enviar: se mandarán solos en cuanto tengas conexión.');
+  function queue(){ store._pending = 1; save(); setSt('Sin conexión: tus avances se enviarán solos en cuanto vuelvas a tener internet.'); }
+  function doSend(auto){
     if (sending) return;
     var semanas = collect();
-    if (!semanas.length){ setSt('Todavía no has apuntado nada. Rellena algún entrenamiento y vuelve a enviar.','err'); return; }
+    if (!semanas.length){ if (!auto) setSt('Todavía no has apuntado nada. Rellena algún entrenamiento y vuelve a enviar.','err'); return; }
+    if (navigator.onLine === false){ queue(); return; }
     sending = true; sendBtn.disabled = true; setSt('Enviando…');
     // text/plain evita la comprobación previa del navegador; la respuesta no se puede leer (no-cors)
     fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({ origen:'avances-entreno', clienta:'Marta', plan:'Fase de ganancia', semanas:semanas }) })
     .then(function(){
       var now = new Date();
-      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); save();
+      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); delete store._pending; save();
       setSt('¡Enviado! Tu entrenadora ya tiene tus avances. Puedes seguir apuntando y volver a enviar cuando quieras.','ok');
       sendBtn.textContent = 'Enviado ✓'; setTimeout(function(){ sendBtn.textContent = 'Enviar avances'; }, 4000);
     })
-    .catch(function(){ setSt('No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo. Lo que has apuntado sigue guardado.','err'); })
+    .catch(function(){ queue(); })
     .then(function(){ sending = false; sendBtn.disabled = false; });
-  });
+  }
+  sendBtn.addEventListener('click', function(){ doSend(false); });
+  window.addEventListener('online', function(){ if (store._pending) doSend(true); });
+  if (store._pending && navigator.onLine !== false) setTimeout(function(){ doSend(true); }, 1500);
 
   // --- Resumen: el plan de la semana en una pantalla aparte ---
   var sum = document.createElement('div');
@@ -817,6 +845,26 @@ html.anim [data-pop].in{opacity:1;transform:none}
   }
   sum.addEventListener('click',function(e){ if (e.target.closest('[data-sum-close]')) closeSum(); });
   document.addEventListener('keydown',function(e){ if (e.key==='Escape' && sum.classList.contains('open')) closeSum(); });
+
+  // --- App instalable: aviso para añadirla a la pantalla de inicio + funcionamiento sin conexión ---
+  (function(){
+    var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function(){});
+    var box = document.getElementById('install'), how = document.getElementById('installHow'), btn = document.getElementById('installBtn'), x = document.getElementById('installX');
+    var hidden = false; try { hidden = localStorage.getItem('marta-install-hide') === '1'; } catch(e){}
+    if (standalone || hidden) return;
+    var ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), android = /Android/.test(ua);
+    if (ios){ how.textContent = 'En Safari: pulsa Compartir (el cuadrado con la flecha) y luego «Añadir a pantalla de inicio».'; box.hidden = false; }
+    else if (android){ how.textContent = 'En Chrome: menú ⋮ y «Instalar aplicación» o «Añadir a pantalla de inicio».'; box.hidden = false; }
+    var deferred = null;
+    window.addEventListener('beforeinstallprompt', function(e){
+      e.preventDefault(); deferred = e; btn.hidden = false; box.hidden = false;
+      if (!how.textContent) how.textContent = 'Tenla en tu pantalla de inicio, a pantalla completa.';
+    });
+    btn.addEventListener('click', function(){ if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function(){ deferred = null; box.hidden = true; }); });
+    x.addEventListener('click', function(){ box.hidden = true; try { localStorage.setItem('marta-install-hide','1'); } catch(e){} });
+    window.addEventListener('appinstalled', function(){ box.hidden = true; });
+  })();
 
   render();
   popIn(document.querySelector('.hero'));
