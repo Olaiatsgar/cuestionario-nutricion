@@ -165,6 +165,11 @@ body.sum-on{overflow:hidden}
 .tool[data-tool="n"]{width:40px;height:40px}
 .tool[data-tool="n"] svg{width:20px;height:20px}
 .tool.has-val{border:2.5px solid var(--c);font-weight:500;color:var(--ink)}
+.rec{margin-top:6px;padding-top:12px;border-top:1px dashed var(--border-strong)}
+.rec__row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rec__l{font-size:14px;font-weight:500;color:var(--ink-2)}
+.rec__panel{display:none;margin-top:10px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;padding:14px;box-shadow:var(--shadow-md)}
+.rec__panel.open{display:block}
 .wo__panel{display:none;margin-top:8px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;padding:14px;box-shadow:var(--shadow-md)}
 .wo__panel.open{display:block}
 .wo__panel textarea{width:100%;min-height:90px;resize:vertical;font:inherit;font-size:15px;line-height:1.55;color:var(--text);background:var(--bg-deep);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
@@ -299,7 +304,7 @@ html.anim [data-pop].in{opacity:1;transform:none}
 <section class="wrap send">
   <div class="send__card">
     <h2>Enviar avances</h2>
-    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción y fatiga.</p>
+    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción, fatiga y recuperación.</p>
     <button type="button" class="btn btn-primary" id="send">Enviar avances</button>
     <p class="send__status" id="sendStatus" role="status" aria-live="polite"></p>
   </div>
@@ -445,6 +450,27 @@ html.anim [data-pop].in{opacity:1;transform:none}
 
   // --- Notas · satisfacción · fatiga (0-10, verde → rojo) ---
   var PEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+  // Recuperación tras sesiones: una valoración 0-10 al final de cada semana (10 = muy recuperada)
+  var REC = { label:'Recuperación', title:'¿Cómo de recuperada te sientes tras las sesiones?', lo:'0 · nada', hi:'10 · totalmente', good:function(v){return v/10;} };
+  function recBtn(rk){
+    var v = store[rk], set = v!=null;
+    return '<button type="button" class="tool tool--txt'+(set?' has-val':'')+'"'+(set?' style="--c:'+moodColor(REC.good(v))+'"':'')+' data-rec aria-expanded="false" aria-label="Recuperación'+(set?' '+v+' de 10':'')+'">'+(set?v+' / 10':'Valorar')+'</button>';
+  }
+  function recBlock(mon){
+    var rk = 'rec-'+key(mon);
+    return '<div class="rec" data-rk="'+rk+'"><div class="rec__row"><span class="rec__l">Recuperación tras sesiones</span>'+recBtn(rk)+'</div><div class="rec__panel"></div></div>';
+  }
+  function recPanel(rk){
+    var v = store[rk], h = '<p class="picker__t">'+REC.title+'</p><div class="scale">';
+    for (var i=0;i<=10;i++) h += '<button type="button" data-recscore="'+i+'" style="--c:'+moodColor(REC.good(i))+'" aria-pressed="'+(v===i)+'" aria-label="Recuperación '+i+'">'+i+'</button>';
+    return h+'</div><div class="scale__ends"><span>'+REC.lo+'</span><span>'+REC.hi+'</span></div>'+(v!=null?'<button type="button" class="panel__clear" data-recclear>Quitar valoración</button>':'');
+  }
+  function refreshRec(box){
+    var rk = box.getAttribute('data-rk'), tmp = document.createElement('div'); tmp.innerHTML = recBtn(rk);
+    box.querySelector('[data-rec]').replaceWith(tmp.firstChild);
+    box.querySelector('.rec__panel').classList.remove('open');
+  }
+
   var SCALES = {
     s:{ label:'Satisfacción', title:'¿Cómo de satisfecha estás con el entreno?', lo:'0 · nada', hi:'10 · muchísimo', good:function(v){return v/10;} },
     f:{ label:'Fatiga', title:'¿Cuánta fatiga sientes?', lo:'0 · ninguna', hi:'10 · máxima', good:function(v){return 1-v/10;} }
@@ -529,7 +555,7 @@ html.anim [data-pop].in{opacity:1;transform:none}
             '<label class="done"><input type="checkbox" data-k="'+k+'"'+(store[k]?' checked':'')+' aria-label="Hecho: '+w.name+'"></label>'+chev+
           '</div>'+tools(key(mon)+'-'+o[0])+'</div><div class="wo__panel"></div><div class="fold"><div><div class="wo__body">'+(hasDay?'':daySelect(mon))+exList(w,lk)+'</div></div></div></div>';
       });
-      html += '</div></div></div></div>';
+      html += recBlock(mon) + '</div></div></div></div>';
     });
     mainEl.innerHTML = html + '</div>';
     var mt = mainEl.querySelector('.month__title'); mt.setAttribute('data-pop','');
@@ -593,6 +619,16 @@ html.anim [data-pop].in{opacity:1;transform:none}
     if (e.target.closest('[data-sum]')){ openSum(); return; }
     var tl = e.target.closest('[data-tool]');
     if (tl){ openPanel(tl.closest('.wo'), tl.getAttribute('data-tool')); return; }
+    var rb = e.target.closest('[data-rec]');
+    if (rb){
+      var box = rb.closest('.rec'), pn = box.querySelector('.rec__panel'), open = !pn.classList.contains('open');
+      if (open) pn.innerHTML = recPanel(box.getAttribute('data-rk'));
+      pn.classList.toggle('open', open); rb.setAttribute('aria-expanded', open); return;
+    }
+    var rs = e.target.closest('[data-recscore]');
+    if (rs){ var bx = rs.closest('.rec'); store[bx.getAttribute('data-rk')] = +rs.getAttribute('data-recscore'); save(); refreshRec(bx); return; }
+    var rc = e.target.closest('[data-recclear]');
+    if (rc){ var bx2 = rc.closest('.rec'); delete store[bx2.getAttribute('data-rk')]; save(); refreshRec(bx2); return; }
     var sb = e.target.closest('[data-score]');
     if (sb){
       var wo3 = sb.closest('.wo'), pt = wo3.querySelector('.wo__panel').getAttribute('data-type');
@@ -724,7 +760,8 @@ html.anim [data-pop].in{opacity:1;transform:none}
             nota: store['n-'+wk] || '', ejercicios:ejercicios };
           if (d!=null || done || ejercicios.length || en.nota || en.satisfaccion!=null || en.fatiga!=null) entrenos.push(en);
         });
-        if (entrenos.length) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), entrenos:entrenos });
+        var rec = store['rec-'+key(mon)];
+        if (entrenos.length || rec!=null) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion: rec!=null ? rec : null, entrenos:entrenos });
       });
     });
     return semanas;
