@@ -293,7 +293,14 @@ html.anim [data-pop].in{opacity:1;transform:none}
 .done input:checked,.wo__day.is-set,.tool.has-note{animation:pop .45s var(--bounce)}
 .tool.has-val{animation:pop .45s var(--bounce),ring .7s ease-out}
 .is-saved [data-act="edit"]{animation:pop .4s var(--bounce)}
+/* Título: efecto cortina en escalera (como Roasted): cada letra sube desde abajo tras una máscara, una detrás de otra */
+.lt{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.lt>span{display:inline-block;transform:translateY(110%);animation:ltup 1.1s var(--ease) forwards;animation-delay:calc(.1s + var(--i)*55ms)}
+h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:inset(0 0 100% 0);animation:nmup 1.2s var(--ease) forwards;animation-delay:var(--d,.7s)}
+@keyframes ltup{to{transform:none}}
+@keyframes nmup{to{transform:none;clip-path:inset(-40% -15% -40% -15%)}}
 @media (prefers-reduced-motion:reduce){
+  .lt>span,h1 .script.nm.lt-name{transform:none!important;clip-path:none!important}
   *{transition-duration:.01s!important;animation:none!important}
   html.anim [data-pop]{opacity:1;transform:none}
 }
@@ -303,7 +310,7 @@ html.anim [data-pop].in{opacity:1;transform:none}
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span></div>
 
 <header class="wrap hero">
-  <h1><span class="ln" data-pop><span>Plan de</span> <span class="script nm">Marta</span><br><span>entrenamiento</span></span></h1>
+  <h1><span class="ln"><span>Plan de</span> <span class="script nm">Marta</span><br><span>entrenamiento</span></span></h1>
   <p class="sub" data-pop style="--d:.26s"><span class="sub__rule" aria-hidden="true"></span>Registro de entrenamiento</p>
 </header>
 
@@ -864,6 +871,22 @@ html.anim [data-pop].in{opacity:1;transform:none}
     btn.addEventListener('click', function(){ if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function(){ deferred = null; box.hidden = true; }); });
     x.addEventListener('click', function(){ box.hidden = true; try { localStorage.setItem('marta-install-hide','1'); } catch(e){} });
     window.addEventListener('appinstalled', function(){ box.hidden = true; });
+  })();
+
+  // Título letra a letra
+  (function(){
+    var h = document.querySelector('h1'); if (!h) return;
+    h.setAttribute('aria-label', (h.innerText || h.textContent).replace(/\s+/g,' ').trim());
+    var i = 0;
+    Array.prototype.forEach.call(h.querySelectorAll('.ln > span:not(.nm)'), function(sp){
+      var t = sp.textContent; sp.textContent = ''; sp.setAttribute('aria-hidden','true');
+      t.split('').forEach(function(ch){
+        if (ch === ' '){ sp.appendChild(document.createTextNode(' ')); return; }
+        var e = document.createElement('span'), inner = document.createElement('span'); e.className = 'lt'; inner.textContent = ch; inner.style.setProperty('--i', i++); e.appendChild(inner); sp.appendChild(e);
+      });
+    });
+    var nm = h.querySelector('.nm');
+    if (nm){ nm.classList.add('lt-name'); nm.setAttribute('aria-hidden','true'); nm.style.setProperty('--d', (0.25 + i*0.055).toFixed(2)+'s'); }
   })();
 
   render();
