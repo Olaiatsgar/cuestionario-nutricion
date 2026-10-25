@@ -217,6 +217,8 @@ body.sum-on{overflow:hidden}
 .tips ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
 .tips li{font-size:14px;line-height:1.5;color:var(--ink-2)}
 .dsel{background:var(--bg-elevated);border:1px solid var(--rosa-deep);border-radius:14px;padding:12px;margin:0 0 14px;box-shadow:0 0 0 4px rgba(235,195,202,.45)}
+.log__l small{display:block;font-size:11px;font-weight:400;color:var(--text-faint);line-height:1.2}
+.log__l--new{padding-top:8px;border-top:1px dashed var(--border)}
 .log{display:grid;grid-template-columns:76px minmax(0,1fr) minmax(0,1fr);gap:6px 8px;align-items:center;margin:0 10px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
 .log__h{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
 .log__l{font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap}
@@ -400,16 +402,25 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     ]}
   };
   // Series a registrar, deducidas de lo que marca el plan (3 × 12 → Serie 1-3 · Top set + Back off 1-2 · Dropset)
+  // Devuelve las filas a registrar: { l: etiqueta, i: posición del dato guardado, t: tramo (solo dropset) }
   function setsOf(e){
     var out = [];
     e[2].forEach(function(line){
       var m;
-      if ((m = line.match(/^Top set (\d+)/))) push('Top set', +m[1]);
+      if (e[1] === 'Dropset' && (m = line.match(/^(\d+) × (\d+(?: \+ \d+)+)/))) dropset(+m[1], m[2].split('+').length);
+      else if ((m = line.match(/^Top set (\d+)/))) push('Top set', +m[1]);
       else if ((m = line.match(/^Back off (\d+)/))) push('Back off', +m[1]);
       else if (/^Dropset/.test(line)) push('Dropset', 1);
       else if ((m = line.match(/^(\d+) ×/))) push('Serie', +m[1]);
     });
-    function push(l,n){ for (var i=1;i<=n;i++) out.push(n>1 ? l+' '+i : (l==='Serie'?'Serie 1':l)); }
+    function push(l,n){ for (var k=1;k<=n;k++) out.push({ l: n>1 ? l+' '+k : (l==='Serie'?'Serie 1':l), i: out.length }); }
+    // Dropset: cada serie tiene varios tramos (reps y peso distintos). El tramo 1 conserva la posición antigua de la serie
+    // (así no se descoloca lo ya apuntado) y los tramos 2, 3… van detrás.
+    function dropset(n,k){
+      var base = out.length;
+      for (var s=0;s<n;s++) for (var d=0;d<k;d++)
+        out.push({ l: 'Serie '+(s+1)+' · tramo '+(d+1), i: d===0 ? base+s : base+n+s*(k-1)+(d-1), t: d+1, s: s+1 });
+    }
     return out;
   }
   function exList(w,lk){
@@ -420,9 +431,10 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
         '<span class="ex__scheme">'+e[1]+'</span><span class="ex__sets">'+e[2].join('<br>')+'</span></div>'+
         '<span class="ex__count'+(filled(v)===sets.length?' is-full':'')+'">'+filled(v)+'/'+sets.length+'</span>'+chev+'</div>'+
         '<div class="fold"><div><div class="log"><span></span><span class="log__h">Reps</span><span class="log__h">Peso</span>'+
-        sets.map(function(lbl,si){
-          var sv = v[si] || [];
-          return '<span class="log__l">'+lbl+'</span>'+
+        sets.map(function(r){
+          var si = r.i, lbl = r.l, sv = v[si] || [];
+          var lab = r.t ? (r.t===1 ? 'Serie '+r.s+'<small>tramo 1</small>' : '<small>tramo '+r.t+'</small>') : lbl;
+          return '<span class="log__l'+(r.t===1 && r.s>1 ? ' log__l--new' : '')+'">'+lab+'</span>'+
             '<input type="text" inputmode="numeric" data-ex="'+i+'" data-s="'+si+'" data-f="0" value="'+esc(sv[0]||'')+'"'+ro+' placeholder="–" aria-label="'+e[0]+', '+lbl+': repeticiones">'+
             '<input type="text" inputmode="decimal" data-ex="'+i+'" data-s="'+si+'" data-f="1" value="'+esc(sv[1]||'')+'"'+ro+' placeholder="kg" aria-label="'+e[0]+', '+lbl+': peso en kg">';
         }).join('')+'</div></div></div></li>';
@@ -781,7 +793,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
           var ejercicios = [];
           w.ex.forEach(function(e,i){
             var v = log.v[i] || [], series = [];
-            setsOf(e).forEach(function(lbl,si){ var sv = v[si] || []; if (sv[0] || sv[1]) series.push({etiqueta:lbl, reps:sv[0]||'', peso:sv[1]||''}); });
+            setsOf(e).forEach(function(r){ var sv = v[r.i] || []; if (sv[0] || sv[1]) series.push({etiqueta:r.l, reps:sv[0]||'', peso:sv[1]||''}); });
             if (series.length) ejercicios.push({nombre:e[0], series:series});
           });
           var en = { nombre:w.name, dia: d!=null ? DAYS[d]+' '+clean(fmtShort.format(addDays(mon,d))) : null, hecho:done, guardado:!!log.saved,
