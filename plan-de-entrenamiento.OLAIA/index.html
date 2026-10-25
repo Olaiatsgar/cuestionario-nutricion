@@ -249,7 +249,14 @@ body.sum-on{overflow:hidden}
 .tabs{display:flex;gap:6px;margin:0 0 14px;padding:4px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;width:max-content;max-width:100%}
 .tab{font-size:14px;font-weight:500;padding:8px 22px;border-radius:999px;color:var(--text-dim)}
 .tab[aria-selected="true"]{background:var(--gradient);color:var(--cream)}
-.tab-dieta .legend{display:none}
+.tab-dieta .legend,.tab-dieta .send{display:none}
+.dweeks{display:flex;flex-wrap:wrap;gap:6px}
+.dwk{font-size:13px;padding:7px 14px;border-radius:999px;border:1px solid var(--border-strong);background:var(--bg-elevated);color:var(--text-dim)}
+.dwk[aria-pressed="true"]{background:var(--gradient);color:var(--cream);border-color:transparent}
+.dform{display:flex;flex-direction:column;gap:18px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-sm);padding:18px}
+.stepper__t{font-size:13px;color:var(--text-dim)}
+.dsend{width:100%;margin-top:4px}
+.dform .scale button[aria-pressed="true"]{border-color:var(--c)}
 .diet{display:flex;flex-direction:column;gap:22px;padding-block:28px 40px}
 .diet h3{font-size:18px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;margin:0 0 10px}
 .dtype{display:flex;gap:6px;flex-wrap:wrap}
@@ -384,7 +391,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
 <section class="wrap send">
   <div class="send__card">
     <h2>Enviar avances</h2>
-    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción, fatiga, recuperación y tu registro de dieta.</p>
+    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción, fatiga y recuperación.</p>
     <button type="button" class="btn btn-primary" id="send">Enviar avances</button>
     <p class="send__status" id="sendStatus" role="status" aria-live="polite"></p>
   </div>
@@ -811,24 +818,33 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       { g:'Proteínas', items:[] }, { g:'Hidratos', items:[] }, { g:'Grasas', items:[] }, { g:'Fruta', items:[] }, { g:'Verdura', items:[] }
     ]
   };
-  var DIG = ['Buenas','Normales','Pesadas','Malas'], SIGUE = ['Sí, entera','Casi toda','A medias','No'];
+  var DIG = ['Buenas','Normales','Pesadas','Malas'];
   var dietEl = document.getElementById('diet');
   function pend(t){ return '<p class="pend">'+(t||'Pendiente de rellenar.')+'</p>'; }
   function dfold(head, body, extraCls){ return '<div class="dfold'+(extraCls?' '+extraCls:'')+'"><button type="button" class="dfold__head" aria-expanded="false">'+head+chev+'</button><div class="fold"><div><div class="dfold__body">'+body+'</div></div></div></div>'; }
   function chipsRow(field, list, val){ return '<div class="dchips">'+list.map(function(o){ return '<button type="button" class="dchip" data-dw="'+field+'" data-v="'+esc(o)+'" aria-pressed="'+(val===o)+'">'+o+'</button>'; }).join('')+'</div>'; }
-  function weekDiet(mon, wi){
-    var k = 'dw-'+key(mon), d = store[k] || {}, sun = addDays(mon,6);
-    var h = '<div class="dq"><span class="dq__l">Hambre</span><div class="scale">';
-    for (var i=0;i<=10;i++) h += '<button type="button" data-dw="hambre" data-v="'+i+'" aria-pressed="'+(d.hambre===String(i))+'">'+i+'</button>';
-    h += '</div><div class="scale__ends"><span>0 · nada</span><span>10 · muchísima</span></div></div>';
-    h += '<div class="dq"><span class="dq__l">Digestiones</span>'+chipsRow('dig', DIG, d.dig)+'</div>';
-    h += '<div class="dq"><span class="dq__l">¿Has seguido la dieta?</span>'+chipsRow('sigue', SIGUE, d.sigue)+'</div>';
+  // Preguntas semanales de la dieta (lo único que se envía de este apartado)
+  var HINCH = ['No','A veces','A menudo'], MOMENTOS = ['Mañana','Mediodía','Tarde','Noche'];
+  function dietForm(mon, wi){
+    var k = 'dw-'+key(mon), d = store[k] || {};
+    var h = '<div class="dform" data-dw-key="'+k+'" data-wi="'+wi+'">';
+    h += '<div class="dq"><span class="dq__l">1. Satisfacción con la dieta</span><div class="scale">';
+    for (var i=0;i<=10;i++) h += '<button type="button" data-dw="sat" data-v="'+i+'" style="--c:'+moodColor(i/10)+'" aria-pressed="'+(d.sat===String(i))+'">'+i+'</button>';
+    h += '</div><div class="scale__ends"><span>0 · nada</span><span>10 · muchísimo</span></div></div>';
+    h += '<div class="dq"><span class="dq__l">2. ¿Algún alimento que cambiarías?</span><textarea data-dwt="cambiar" rows="2" placeholder="Escribe cuál y por qué…">'+esc(d.cambiar||'')+'</textarea></div>';
+    h += '<div class="dq"><span class="dq__l">3. ¿Algún alimento que echas en falta?</span><textarea data-dwt="falta" rows="2" placeholder="Escribe cuál…">'+esc(d.falta||'')+'</textarea></div>';
+    h += '<div class="dq"><span class="dq__l">4. ¿Te has sentido hinchada?</span>'+chipsRow('hinchada', HINCH, d.hinchada)+'</div>';
+    h += '<div class="dq"><span class="dq__l">5. ¿Cómo han sido tus digestiones?</span>'+chipsRow('dig', DIG, d.dig)+'</div>';
     var n = +(d.saltos||0);
-    h += '<div class="dq"><span class="dq__l">Saltos de comida</span><div class="stepper"><button type="button" data-step="-1" aria-label="Uno menos">−</button><span class="stepper__n">'+n+'</span><button type="button" data-step="1" aria-label="Uno más">+</button></div>'+
+    h += '<div class="dq"><span class="dq__l">6. ¿Has hecho algún salto de comida?</span><div class="stepper"><button type="button" data-step="-1" aria-label="Uno menos">−</button><span class="stepper__n">'+n+'</span><button type="button" data-step="1" aria-label="Uno más">+</button><span class="stepper__t">'+(n===1?'comida saltada':'comidas saltadas')+'</span></div>'+
          '<textarea data-dwt="saltosNota" rows="2" placeholder="¿Cuáles y por qué? (opcional)">'+esc(d.saltosNota||'')+'</textarea></div>';
-    h += '<div class="dq dq--peso"><span class="dq__l">Peso semanal</span><label class="peso"><input type="text" inputmode="decimal" data-dwt="peso" value="'+esc(d.peso||'')+'" placeholder="–"> <span>kg</span></label></div>';
-    var stat = d.peso ? d.peso+' kg' : (Object.keys(d).length ? 'En curso' : '');
-    return '<div class="dfold dweek" data-dw-key="'+k+'"><button type="button" class="dfold__head" aria-expanded="false"><span class="dweek__t">Semana '+(wi+1)+'</span><span class="dweek__f">'+clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(sun))+'</span><span class="dweek__s">'+stat+'</span>'+chev+'</button><div class="fold"><div><div class="dfold__body">'+h+'</div></div></div></div>';
+    var hm = d.hambre || [];
+    h += '<div class="dq"><span class="dq__l">7. ¿Has sentido hambre en algún momento del día?</span><div class="dchips">'+
+         '<button type="button" class="dchip" data-dwm="hambre" data-v="No" aria-pressed="'+(hm.indexOf('No')>-1)+'">No</button>'+
+         MOMENTOS.map(function(o){ return '<button type="button" class="dchip" data-dwm="hambre" data-v="'+o+'" aria-pressed="'+(hm.indexOf(o)>-1)+'">'+o+'</button>'; }).join('')+'</div></div>';
+    h += '<div class="dq dq--peso"><span class="dq__l">8. Peso de la semana</span><label class="peso"><input type="text" inputmode="decimal" data-dwt="peso" value="'+esc(d.peso||'')+'" placeholder="–"> <span>kg</span></label></div>';
+    h += '<button type="button" class="btn btn-primary dsend" data-dsend>Enviar respuestas de la semana '+(wi+1)+'</button><p class="send__status" data-dsend-st>'+(d._sent ? 'Enviado el '+d._sent+'.' : '')+'</p>';
+    return h+'</div>';
   }
   function renderDiet(){
     var type = store._dtype === 'descanso' ? 'descanso' : 'entreno';
@@ -842,28 +858,51 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     });
     h += '</section>';
     h += '<section class="dmeals"><h3>Equivalencias</h3>'+dfold('<span class="dmeal__n">Qué puedo cambiar por qué<small>dentro de cada grupo</small></span>', DIETA.equiv.map(function(g){ return '<div class="dop"><span class="dop__n">'+g.g+'</span>'+(g.items.length ? '<ul>'+g.items.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join(''))+'</section>';
-    var m = MONTHS[current];
-    h += '<section class="dmeals"><h3>Registro semanal</h3><p class="dhint">'+fmtMonthY.format(m)+' · apunta cómo ha ido cada semana. Se envía con «Enviar avances».</p>';
-    mondaysOf(m).forEach(function(mon,wi){ h += weekDiet(mon,wi); });
+    var m = MONTHS[current], mons = mondaysOf(m), sel = 0;
+    mons.forEach(function(mon,wi){ if (store._dsel === key(mon)) sel = wi; else if (store._dsel == null && today>=mon && today<=addDays(mon,6)) sel = wi; });
+    h += '<section class="dmeals dquest"><h3>Preguntas de la semana</h3><p class="dhint">Respóndelas al final de cada semana y pulsa enviar. Elige la semana:</p>';
+    h += '<div class="dweeks">'+mons.map(function(mon,wi){ var d = store['dw-'+key(mon)]; return '<button type="button" class="dwk" data-dsel="'+key(mon)+'" aria-pressed="'+(wi===sel)+'">Semana '+(wi+1)+((d&&d._sent)?' ✓':'')+'</button>'; }).join('')+'</div>';
+    h += dietForm(mons[sel], sel);
     h += '</section></div>';
     dietEl.innerHTML = h;
   }
-  function dget(el){ var w = el.closest('.dweek'), k = w.getAttribute('data-dw-key'); store[k] = store[k] || {}; return { w:w, d:store[k] }; }
-  function dstat(w,d){ var s = w.querySelector('.dweek__s'); s.textContent = d.peso ? d.peso+' kg' : (Object.keys(d).length ? 'En curso' : ''); }
+  function dget(el){ var w = el.closest('.dform'), k = w.getAttribute('data-dw-key'); store[k] = store[k] || {}; return { w:w, d:store[k], k:k }; }
+  function dclean(d){ var o = {}; Object.keys(d).forEach(function(k){ if (k.charAt(0) !== '_' && d[k] !== '' && d[k] != null && !(Array.isArray(d[k]) && !d[k].length)) o[k] = d[k]; }); return o; }
   dietEl.addEventListener('click', function(e){
     var hd = e.target.closest('.dfold__head'); if (hd){ toggle(hd.parentNode); return; }
     var t = e.target.closest('[data-dtype]'); if (t){ store._dtype = t.getAttribute('data-dtype'); save(); renderDiet(); return; }
+    var ws = e.target.closest('[data-dsel]'); if (ws){ store._dsel = ws.getAttribute('data-dsel'); save(); renderDiet(); dietEl.querySelector('.dquest').scrollIntoView({block:'start'}); return; }
     var b = e.target.closest('[data-dw]');
     if (b){ var x = dget(b), f = b.getAttribute('data-dw'), v = b.getAttribute('data-v');
       if (x.d[f] === v) delete x.d[f]; else x.d[f] = v; save();
       Array.prototype.forEach.call(b.parentNode.querySelectorAll('[data-dw="'+f+'"]'), function(o){ o.setAttribute('aria-pressed', x.d[f] === o.getAttribute('data-v')); });
-      dstat(x.w, x.d); return; }
+      return; }
+    var mb = e.target.closest('[data-dwm]');
+    if (mb){ var y = dget(mb), list = y.d.hambre || [], val = mb.getAttribute('data-v'), at = list.indexOf(val);
+      if (at > -1) list.splice(at,1); else { if (val === 'No') list = ['No']; else { list = list.filter(function(z){ return z !== 'No'; }); list.push(val); } }
+      y.d.hambre = list; save();
+      Array.prototype.forEach.call(mb.parentNode.querySelectorAll('[data-dwm]'), function(o){ o.setAttribute('aria-pressed', list.indexOf(o.getAttribute('data-v')) > -1); });
+      return; }
     var st = e.target.closest('[data-step]');
-    if (st){ var y = dget(st), n = Math.max(0, (+(y.d.saltos||0)) + (+st.getAttribute('data-step'))); y.d.saltos = String(n); save(); st.parentNode.querySelector('.stepper__n').textContent = n; dstat(y.w, y.d); }
+    if (st){ var z = dget(st), n = Math.max(0, (+(z.d.saltos||0)) + (+st.getAttribute('data-step'))); z.d.saltos = String(n); save();
+      st.parentNode.querySelector('.stepper__n').textContent = n; st.parentNode.querySelector('.stepper__t').textContent = n===1 ? 'comida saltada' : 'comidas saltadas'; return; }
+    var sb = e.target.closest('[data-dsend]');
+    if (sb){ var q = dget(sb), stEl = q.w.querySelector('[data-dsend-st]'), datos = dclean(q.d), wi = +q.w.getAttribute('data-wi');
+      if (!Object.keys(datos).length){ stEl.textContent = 'Responde al menos una pregunta antes de enviar.'; stEl.className = 'send__status err'; return; }
+      var mon = mondaysOf(MONTHS[current])[wi];
+      var payload = { origen:'avances-entreno', tipo:'dieta', clienta:CLIENTA, plan:'Dieta', semanas:[{ mes:fmtMonthY.format(MONTHS[current]), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion:null, dieta:datos, entrenos:[] }] };
+      sb.disabled = true; stEl.className = 'send__status'; stEl.textContent = 'Enviando…';
+      fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) })
+      .then(function(){ var now = new Date(); q.d._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); save();
+        stEl.textContent = '¡Enviado! Tu entrenadora ya tiene tus respuestas de esta semana.'; stEl.className = 'send__status ok';
+        var wb = dietEl.querySelector('[data-dsel="'+key(mon)+'"]'); if (wb && wb.textContent.indexOf('✓') < 0) wb.textContent += ' ✓'; })
+      .catch(function(){ stEl.textContent = 'No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo. Tus respuestas siguen guardadas.'; stEl.className = 'send__status err'; })
+      .then(function(){ sb.disabled = false; });
+    }
   });
   dietEl.addEventListener('input', function(e){
     var f = e.target.getAttribute('data-dwt'); if (!f) return;
-    var x = dget(e.target); if (e.target.value === '') delete x.d[f]; else x.d[f] = e.target.value; save(); dstat(x.w, x.d);
+    var x = dget(e.target); if (e.target.value === '') delete x.d[f]; else x.d[f] = e.target.value; save();
   });
   // Pestañas Entreno / Dieta
   function setTab(t){
@@ -921,6 +960,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   window.addEventListener('resize',function(){ if (picker.classList.contains('open')) place(); });
 
   // --- Enviar avances: manda todo lo registrado al receptor (Google Apps Script) que lo reenvía por correo ---
+  var CLIENTA = 'Olaia';
   var ENDPOINT = "https://script.google.com/macros/s/AKfycbwyPlOEk5qfrLx3EuAT0MRtFquF6rjabfcEl6Qd9sdjvRO55icv6U88keu25RppgnVh/exec";
   function collect(){
     var semanas = [];
@@ -941,9 +981,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
             nota: store['n-'+wk] || '', ejercicios:ejercicios };
           if (d!=null || done || ejercicios.length || en.nota || en.satisfaccion!=null || en.fatiga!=null) entrenos.push(en);
         });
-        var rec = store['rec-'+key(mon)], dw = store['dw-'+key(mon)];
-        var dieta = (dw && Object.keys(dw).some(function(k){ return dw[k]!=='' && dw[k]!=null; })) ? dw : null;
-        if (entrenos.length || rec!=null || dieta) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion: rec!=null ? rec : null, dieta: dieta, entrenos:entrenos });
+        var rec = store['rec-'+key(mon)];
+        if (entrenos.length || rec!=null) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion: rec!=null ? rec : null, entrenos:entrenos });
       });
     });
     return semanas;
@@ -961,7 +1000,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     sending = true; sendBtn.disabled = true; setSt('Enviando…');
     // text/plain evita la comprobación previa del navegador; la respuesta no se puede leer (no-cors)
     fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({ origen:'avances-entreno', clienta:'Olaia', plan:'Fase de ganancia', semanas:semanas }) })
+      body: JSON.stringify({ origen:'avances-entreno', clienta:CLIENTA, plan:'Fase de ganancia', semanas:semanas }) })
     .then(function(){
       var now = new Date();
       store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); delete store._pending; save();
