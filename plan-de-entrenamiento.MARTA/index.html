@@ -41,7 +41,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
 
 .aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;background:linear-gradient(135deg,#FFFBFC 0%,#FAEAED 45%,#EDC3CC 100%)} /* degradado: arriba-izq más claro, abajo-dcha más rosa */
-.aurora span{position:absolute;border-radius:50%;filter:blur(220px);opacity:.32;mix-blend-mode:multiply}
+.aurora span{display:none} /* manchas difuminadas quitadas: hacían ir lento el móvil; el degradado del fondo se mantiene */
 .aurora .a1{width:520px;height:520px;background:rgba(240,200,208,.45);top:-200px;left:-160px}
 .aurora .a2{width:460px;height:460px;background:rgba(236,210,200,.3);top:40%;right:-220px}
 
@@ -61,7 +61,7 @@ h1 .script{font-family:var(--script);font-weight:400;text-transform:none;letter-
 .pill b{color:var(--ink);font-weight:500}
 
 /* Selector de meses (barra fija como la de progreso del cuestionario) */
-.months{position:sticky;top:0;z-index:5;background:rgba(252,242,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.months{position:sticky;top:0;z-index:5;background:rgba(252,242,243,.97);border-bottom:1px solid var(--border)}
 .months__row{display:flex;align-items:center;gap:8px;padding-block:10px}
 .arrow{width:34px;height:34px;flex:none;border-radius:50%;background:var(--rosa-soft);color:var(--ink);display:grid;place-items:center;transition:background .3s}
 .arrow:hover{background:var(--rosa)}
@@ -86,7 +86,7 @@ h1 .script{font-family:var(--script);font-weight:400;text-transform:none;letter-
 /* Resumen: pantalla aparte con el plan semanal */
 .sum{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);transform:translateY(100%);transition:transform .6s var(--ease);visibility:hidden}
 .sum.open{transform:none;visibility:visible}
-.sum__bar{position:sticky;top:0;z-index:2;background:rgba(252,242,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.sum__bar{position:sticky;top:0;z-index:2;background:rgba(252,242,243,.97);border-bottom:1px solid var(--border)}
 .sum__bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
 .sum-btn{white-space:nowrap}
 .sum__bar b{font-weight:500;font-size:15px;text-transform:uppercase;letter-spacing:.06em}
@@ -594,7 +594,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
             dayBadge(mon,o[0],oi)+
             '<span class="wo__name">'+w.name+dayLabel(mon,o[0])+'</span>'+
             '<label class="done"><input type="checkbox" data-k="'+k+'"'+(store[k]?' checked':'')+' aria-label="Hecho: '+w.name+'"></label>'+chev+
-          '</div>'+tools(key(mon)+'-'+o[0])+'</div><div class="wo__panel"></div><div class="fold"><div><div class="wo__body">'+(hasDay?'':daySelect(mon))+exList(w,lk)+'</div></div></div></div>';
+          '</div>'+tools(key(mon)+'-'+o[0])+'</div><div class="wo__panel"></div><div class="fold"><div><div class="wo__body"></div></div></div></div>';
       });
       html += recBlock(mon) + '</div></div></div></div>';
     });
@@ -610,7 +610,16 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     document.getElementById('next').disabled = current===MONTHS.length-1;
   }
 
+  // Construye los ejercicios de un entreno la primera vez que se abre (antes se creaban todos de golpe y el móvil iba lento)
+  function build(wo){
+    if (wo.hasAttribute('data-built')) return;
+    var mon = new Date(+wo.getAttribute('data-mon')), id = wo.getAttribute('data-id');
+    var hasDay = store['d-'+key(mon)+'-'+id]!=null;
+    wo.querySelector('.wo__body').innerHTML = (hasDay?'':daySelect(mon)) + exList(W[id], wo.getAttribute('data-lk'));
+    wo.setAttribute('data-built','');
+  }
   function toggle(el){
+    if (el.classList.contains('wo')) build(el);
     var open = el.classList.toggle('is-open');
     var btn = el.querySelector('.week__btn, .wo__btn, .ex__head'); btn.setAttribute('aria-expanded', open);
     // al abrir, acompaña con el scroll si lo nuevo queda por debajo de la pantalla
@@ -639,6 +648,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     var nb = tmp.firstChild; ob.replaceWith(nb);
     var nm = wo.querySelector('.wo__name'), sm = nm.querySelector('small');
     if (sm) sm.remove(); nm.insertAdjacentHTML('beforeend', dayLabel(mon,id));
+    if (!wo.hasAttribute('data-built')) return nb;
     var ds = wo.querySelector('.dsel'), has = store['d-'+key(mon)+'-'+id]!=null;
     if (has && ds) ds.remove();
     if (!has && !ds) wo.querySelector('.wo__body').insertAdjacentHTML('afterbegin', daySelect(mon));
