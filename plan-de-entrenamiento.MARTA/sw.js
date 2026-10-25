@@ -1,8 +1,8 @@
 // Plan de Marta · funcionamiento sin conexión
 // La página se pide primero a internet (para recibir siempre la última versión) y, si no hay conexión,
 // se sirve la copia guardada. Iconos y tipografías se sirven desde la copia guardada.
-const CACHE = 'plan-marta-v2';
-const BASE = ['./', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+const CACHE = 'plan-marta-v3';
+const BASE = ['./', 'manifest.webmanifest?v=2', 'icon-192.png?v=2', 'icon-512.png?v=2', 'apple-touch-icon.png?v=2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).then(() => self.skipWaiting()));
