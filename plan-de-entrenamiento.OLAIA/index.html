@@ -246,6 +246,49 @@ body.sum-on{overflow:hidden}
 .install__btn{flex:none;font-size:13px;font-weight:500;color:var(--cream);background:var(--gradient);border-radius:999px;padding:8px 14px}
 .install__x{flex:none;width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;color:var(--text-dim)}
 .install__x:hover{background:var(--bg-deep)}
+.tabs{display:flex;gap:6px;margin:0 0 14px;padding:4px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;width:max-content;max-width:100%}
+.tab{font-size:14px;font-weight:500;padding:8px 22px;border-radius:999px;color:var(--text-dim)}
+.tab[aria-selected="true"]{background:var(--gradient);color:var(--cream)}
+.tab-dieta .legend{display:none}
+.diet{display:flex;flex-direction:column;gap:22px;padding-block:28px 40px}
+.diet h3{font-size:18px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;margin:0 0 10px}
+.dtype{display:flex;gap:6px;flex-wrap:wrap}
+.dtype button{flex:1;min-width:0;font-size:14px;padding:10px 12px;border-radius:12px;border:1px solid var(--border-strong);background:var(--bg-elevated);color:var(--text-dim)}
+.dtype button[aria-pressed="true"]{border:2px solid var(--rosa-deep);color:var(--ink);font-weight:500}
+.dcard{background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-sm);padding:18px 20px}
+.dcard ul,.dop ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.dmeals{display:flex;flex-direction:column;gap:10px}
+.dmeals h3{margin-bottom:2px}
+.dhint{margin:-4px 0 4px;font-size:13px;color:var(--text-dim)}
+.dfold{background:var(--bg-elevated);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-sm)}
+.dfold__head{width:100%;display:flex;align-items:center;gap:10px;padding:16px 18px;text-align:left;border-radius:18px}
+.dfold__head:focus-visible{outline:3px solid var(--rosa-deep);outline-offset:-3px}
+.dfold .chev{width:30px;height:30px}
+.is-open > .dfold__head .chev{transform:rotate(180deg);background:var(--ink);color:var(--rosa)}
+.dfold__body{display:flex;flex-direction:column;gap:14px;padding:0 18px 18px}
+.dmeal__n{flex:1;min-width:0;font-size:16px;font-weight:400}
+.dmeal__n small{display:block;font-size:12px;color:var(--text-dim);font-weight:300}
+.dmeal__c{font-size:12px;color:var(--text-faint)}
+.dop{padding-top:10px;border-top:1px dashed var(--border-strong)}
+.dop__n{font-size:13px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.pend{margin:4px 0 0;font-size:14px;color:var(--text-faint);font-style:italic}
+.dweek__t{font-size:16px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:var(--rosa-deep)}
+.dweek__f{flex:1;min-width:0;font-size:13px;color:var(--text-dim)}
+.dweek__s{font-size:12px;font-weight:500;color:var(--accent);white-space:nowrap}
+.dq{display:flex;flex-direction:column;gap:8px}
+.dq__l{font-size:13px;font-weight:500;color:var(--ink-2)}
+.dchips{display:flex;flex-wrap:wrap;gap:6px}
+.dchip{font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--border-strong);background:var(--bg-deep);color:var(--ink-2)}
+.dchip[aria-pressed="true"]{border:2px solid var(--rosa-deep);background:var(--bg-elevated);font-weight:500;color:var(--ink)}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:36px;height:36px;border-radius:50%;border:1px solid var(--border-strong);background:var(--bg-deep);font-size:18px;color:var(--ink)}
+.stepper__n{min-width:20px;text-align:center;font-size:17px;font-weight:500;font-variant-numeric:tabular-nums}
+.dq textarea{width:100%;resize:vertical;font:inherit;font-size:15px;color:var(--text);background:var(--bg-deep);border:1px solid var(--border);border-radius:12px;padding:8px 12px}
+.dq--peso{padding-top:12px;border-top:1px dashed var(--border-strong)}
+.peso{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--text-dim)}
+.peso input{width:110px;font:inherit;font-size:18px;font-weight:500;color:var(--ink);background:var(--bg-deep);border:1px solid var(--border);border-radius:12px;padding:8px 12px;font-variant-numeric:tabular-nums}
+.dq textarea:focus,.peso input:focus{outline:none;background:#fff;border-color:var(--accent-deco);box-shadow:0 0 0 4px rgba(235,195,202,.45)}
+.dweek .scale button[aria-pressed="true"]{border-color:var(--rosa-deep)}
 .send{padding-block:0 24px}
 .send__card{background:#F9E6E9;border:1px solid #EFD3D8;border-radius:20px;box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:12px}
 .send__card h2{font-size:20px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;margin:0}
@@ -322,6 +365,11 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   <button type="button" class="install__x" id="installX" aria-label="Cerrar aviso">×</button>
 </div></div>
 
+<div class="wrap"><div class="tabs" role="tablist" aria-label="Secciones">
+  <button type="button" class="tab" role="tab" data-tab="entreno" aria-selected="true">Entreno</button>
+  <button type="button" class="tab" role="tab" data-tab="dieta" aria-selected="false">Dieta</button>
+</div></div>
+
 <nav class="months" aria-label="Meses">
   <div class="wrap months__row">
     <button class="arrow" id="prev" aria-label="Mes anterior"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -331,11 +379,12 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
 </nav>
 
 <main class="wrap" id="month"></main>
+<main class="wrap" id="diet" hidden></main>
 
 <section class="wrap send">
   <div class="send__card">
     <h2>Enviar avances</h2>
-    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción, fatiga y recuperación.</p>
+    <p>Cuando termines una semana, o cuando quieras, envíame todo lo que llevas apuntado: días, series, pesos, notas, satisfacción, fatiga, recuperación y tu registro de dieta.</p>
     <button type="button" class="btn btn-primary" id="send">Enviar avances</button>
     <p class="send__status" id="sendStatus" role="status" aria-live="polite"></p>
   </div>
@@ -608,6 +657,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     });
     document.getElementById('prev').disabled = current===0;
     document.getElementById('next').disabled = current===MONTHS.length-1;
+    if (typeof renderDiet === 'function') renderDiet();
   }
 
   // Construye los ejercicios de un entreno la primera vez que se abre (antes se creaban todos de golpe y el móvil iba lento)
@@ -621,7 +671,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function toggle(el){
     if (el.classList.contains('wo')) build(el);
     var open = el.classList.toggle('is-open');
-    var btn = el.querySelector('.week__btn, .wo__btn, .ex__head'); btn.setAttribute('aria-expanded', open);
+    var btn = el.querySelector('.week__btn, .wo__btn, .ex__head, .dfold__head'); btn.setAttribute('aria-expanded', open);
     // al abrir, acompaña con el scroll si lo nuevo queda por debajo de la pantalla
     if (open) setTimeout(function(){
       var r = el.getBoundingClientRect(), over = r.bottom - window.innerHeight + 24;
@@ -745,6 +795,86 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   document.getElementById('prev').onclick=function(){ if(current>0){current--;render();} };
   document.getElementById('next').onclick=function(){ if(current<MONTHS.length-1){current++;render();} };
 
+  // ===================== DIETA =====================
+  // Contenido del plan de alimentación (se rellena con la entrenadora). Cada opción tiene cantidades para día de entreno y de descanso.
+  var DIETA = {
+    pautas: [],
+    comidas: [
+      { id:'desayuno', name:'Desayuno', ops:[] },
+      { id:'almuerzo', name:'Almuerzo', ops:[] },
+      { id:'comida',   name:'Comida',   ops:[] },
+      { id:'merienda', name:'Merienda', sub:'antes de entrenar', ops:[] },
+      { id:'cena',     name:'Cena',     ops:[] }
+    ],
+    // ops: [{ name:'Opción A', entreno:['…'], descanso:['…'] }]
+    equiv: [
+      { g:'Proteínas', items:[] }, { g:'Hidratos', items:[] }, { g:'Grasas', items:[] }, { g:'Fruta', items:[] }, { g:'Verdura', items:[] }
+    ]
+  };
+  var DIG = ['Buenas','Normales','Pesadas','Malas'], SIGUE = ['Sí, entera','Casi toda','A medias','No'];
+  var dietEl = document.getElementById('diet');
+  function pend(t){ return '<p class="pend">'+(t||'Pendiente de rellenar.')+'</p>'; }
+  function dfold(head, body, extraCls){ return '<div class="dfold'+(extraCls?' '+extraCls:'')+'"><button type="button" class="dfold__head" aria-expanded="false">'+head+chev+'</button><div class="fold"><div><div class="dfold__body">'+body+'</div></div></div></div>'; }
+  function chipsRow(field, list, val){ return '<div class="dchips">'+list.map(function(o){ return '<button type="button" class="dchip" data-dw="'+field+'" data-v="'+esc(o)+'" aria-pressed="'+(val===o)+'">'+o+'</button>'; }).join('')+'</div>'; }
+  function weekDiet(mon, wi){
+    var k = 'dw-'+key(mon), d = store[k] || {}, sun = addDays(mon,6);
+    var h = '<div class="dq"><span class="dq__l">Hambre</span><div class="scale">';
+    for (var i=0;i<=10;i++) h += '<button type="button" data-dw="hambre" data-v="'+i+'" aria-pressed="'+(d.hambre===String(i))+'">'+i+'</button>';
+    h += '</div><div class="scale__ends"><span>0 · nada</span><span>10 · muchísima</span></div></div>';
+    h += '<div class="dq"><span class="dq__l">Digestiones</span>'+chipsRow('dig', DIG, d.dig)+'</div>';
+    h += '<div class="dq"><span class="dq__l">¿Has seguido la dieta?</span>'+chipsRow('sigue', SIGUE, d.sigue)+'</div>';
+    var n = +(d.saltos||0);
+    h += '<div class="dq"><span class="dq__l">Saltos de comida</span><div class="stepper"><button type="button" data-step="-1" aria-label="Uno menos">−</button><span class="stepper__n">'+n+'</span><button type="button" data-step="1" aria-label="Uno más">+</button></div>'+
+         '<textarea data-dwt="saltosNota" rows="2" placeholder="¿Cuáles y por qué? (opcional)">'+esc(d.saltosNota||'')+'</textarea></div>';
+    h += '<div class="dq dq--peso"><span class="dq__l">Peso semanal</span><label class="peso"><input type="text" inputmode="decimal" data-dwt="peso" value="'+esc(d.peso||'')+'" placeholder="–"> <span>kg</span></label></div>';
+    var stat = d.peso ? d.peso+' kg' : (Object.keys(d).length ? 'En curso' : '');
+    return '<div class="dfold dweek" data-dw-key="'+k+'"><button type="button" class="dfold__head" aria-expanded="false"><span class="dweek__t">Semana '+(wi+1)+'</span><span class="dweek__f">'+clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(sun))+'</span><span class="dweek__s">'+stat+'</span>'+chev+'</button><div class="fold"><div><div class="dfold__body">'+h+'</div></div></div></div>';
+  }
+  function renderDiet(){
+    var type = store._dtype === 'descanso' ? 'descanso' : 'entreno';
+    var h = '<div class="diet">';
+    h += '<div class="dtype" role="radiogroup" aria-label="Tipo de día"><button type="button" data-dtype="entreno" aria-pressed="'+(type==='entreno')+'">Día de entreno</button><button type="button" data-dtype="descanso" aria-pressed="'+(type==='descanso')+'">Día de descanso</button></div>';
+    h += '<section class="dcard"><h3>Pautas</h3>'+(DIETA.pautas.length ? '<ul>'+DIETA.pautas.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ul>' : pend('Pendiente: objetivo, agua, antes y después de entrenar…'))+'</section>';
+    h += '<section class="dmeals"><h3>Comidas del día</h3>';
+    DIETA.comidas.forEach(function(c){
+      var body = c.ops.length ? c.ops.map(function(o){ var it = o[type] || []; return '<div class="dop"><span class="dop__n">'+o.name+'</span>'+(it.length ? '<ul>'+it.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join('') : pend('Opciones pendientes de añadir.');
+      h += dfold('<span class="dmeal__n">'+c.name+(c.sub?'<small>'+c.sub+'</small>':'')+'</span><span class="dmeal__c">'+(c.ops.length ? c.ops.length+' opciones' : '')+'</span>', body);
+    });
+    h += '</section>';
+    h += '<section class="dmeals"><h3>Equivalencias</h3>'+dfold('<span class="dmeal__n">Qué puedo cambiar por qué<small>dentro de cada grupo</small></span>', DIETA.equiv.map(function(g){ return '<div class="dop"><span class="dop__n">'+g.g+'</span>'+(g.items.length ? '<ul>'+g.items.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join(''))+'</section>';
+    var m = MONTHS[current];
+    h += '<section class="dmeals"><h3>Registro semanal</h3><p class="dhint">'+fmtMonthY.format(m)+' · apunta cómo ha ido cada semana. Se envía con «Enviar avances».</p>';
+    mondaysOf(m).forEach(function(mon,wi){ h += weekDiet(mon,wi); });
+    h += '</section></div>';
+    dietEl.innerHTML = h;
+  }
+  function dget(el){ var w = el.closest('.dweek'), k = w.getAttribute('data-dw-key'); store[k] = store[k] || {}; return { w:w, d:store[k] }; }
+  function dstat(w,d){ var s = w.querySelector('.dweek__s'); s.textContent = d.peso ? d.peso+' kg' : (Object.keys(d).length ? 'En curso' : ''); }
+  dietEl.addEventListener('click', function(e){
+    var hd = e.target.closest('.dfold__head'); if (hd){ toggle(hd.parentNode); return; }
+    var t = e.target.closest('[data-dtype]'); if (t){ store._dtype = t.getAttribute('data-dtype'); save(); renderDiet(); return; }
+    var b = e.target.closest('[data-dw]');
+    if (b){ var x = dget(b), f = b.getAttribute('data-dw'), v = b.getAttribute('data-v');
+      if (x.d[f] === v) delete x.d[f]; else x.d[f] = v; save();
+      Array.prototype.forEach.call(b.parentNode.querySelectorAll('[data-dw="'+f+'"]'), function(o){ o.setAttribute('aria-pressed', x.d[f] === o.getAttribute('data-v')); });
+      dstat(x.w, x.d); return; }
+    var st = e.target.closest('[data-step]');
+    if (st){ var y = dget(st), n = Math.max(0, (+(y.d.saltos||0)) + (+st.getAttribute('data-step'))); y.d.saltos = String(n); save(); st.parentNode.querySelector('.stepper__n').textContent = n; dstat(y.w, y.d); }
+  });
+  dietEl.addEventListener('input', function(e){
+    var f = e.target.getAttribute('data-dwt'); if (!f) return;
+    var x = dget(e.target); if (e.target.value === '') delete x.d[f]; else x.d[f] = e.target.value; save(); dstat(x.w, x.d);
+  });
+  // Pestañas Entreno / Dieta
+  function setTab(t){
+    document.body.classList.toggle('tab-dieta', t==='dieta');
+    document.getElementById('month').hidden = t==='dieta'; dietEl.hidden = t!=='dieta';
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(b){ b.setAttribute('aria-selected', b.getAttribute('data-tab')===t); });
+    store._tab = t; save();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(b){ b.addEventListener('click', function(){ setTab(b.getAttribute('data-tab')); }); });
+  if (store._tab === 'dieta') setTab('dieta');
+
   // --- Elegir el día en que se hizo cada entrenamiento ---
   var picker = document.createElement('div');
   picker.className = 'picker'; picker.setAttribute('role','dialog'); picker.setAttribute('aria-label','Elegir día');
@@ -811,8 +941,9 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
             nota: store['n-'+wk] || '', ejercicios:ejercicios };
           if (d!=null || done || ejercicios.length || en.nota || en.satisfaccion!=null || en.fatiga!=null) entrenos.push(en);
         });
-        var rec = store['rec-'+key(mon)];
-        if (entrenos.length || rec!=null) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion: rec!=null ? rec : null, entrenos:entrenos });
+        var rec = store['rec-'+key(mon)], dw = store['dw-'+key(mon)];
+        var dieta = (dw && Object.keys(dw).some(function(k){ return dw[k]!=='' && dw[k]!=null; })) ? dw : null;
+        if (entrenos.length || rec!=null || dieta) semanas.push({ mes:fmtMonthY.format(m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion: rec!=null ? rec : null, dieta: dieta, entrenos:entrenos });
       });
     });
     return semanas;
