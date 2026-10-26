@@ -925,7 +925,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       var im = c.img && c.img[type];
       var fm = (location.search.match(/foto=(\w+)/)||[])[1] || DIETA.fotoModo, mini = '';
       if (im && fm === 'boton') body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Ver foto</button><div class="dalt__list dfoto" hidden><img src="'+im.src+'" alt="'+im.alt+'" loading="lazy"><p class="dimg__c">Una idea de cómo puede quedar</p></div></div>';
-      if (im && fm === 'mini') mini = '<img class="dmini" src="'+im.src+'" alt="" data-zoom="'+im.src+'" data-zalt="'+im.alt+'">';
+      if (im && fm === 'mini') mini = '<img class="dmini" src="'+im.src+'" alt="">';
       if (im && fm === 'lado') body = '<div class="dlado"><div class="dlado__l">'+body+'</div><img class="dlado__img" src="'+im.src+'" alt="'+im.alt+'" data-zoom="'+im.src+'" data-zalt="'+im.alt+'"></div>';
       var alts = c.alt && c.alt[type];
       if (alts && alts.length) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+alts.map(function(x){ return '<p class="dalt__de">En lugar de '+x.de+':</p><ul>'+x.por.map(function(p){ return '<li>'+p+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
