@@ -6,11 +6,11 @@
 <title>Plan de Olaia</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#FCF2F3">
+<meta name="theme-color" content="#5E2533">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Olaia">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,9 +49,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 
 /* Cabecera */
 /* Burdeos: cabecera y franja de meses/semanas */
-html .hero{position:relative;isolation:isolate;margin-bottom:28px}
+html .hero{position:relative;isolation:isolate;margin-bottom:28px;padding-top:calc(64px + env(safe-area-inset-top,0px))}
 html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#5E2533 0%,#5E2533 62%,rgba(94,37,51,.72) 76%,rgba(94,37,51,.32) 89%,rgba(94,37,51,0) 100%)}
 html body{overflow-x:clip}
+/* Zona de la barra de estado del móvil (app instalada): burdeos y la franja de meses se pega debajo */
+html body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#5E2533;z-index:20;pointer-events:none}
+html .months{top:env(safe-area-inset-top,0px)}
 html .hero h1{color:#F7EDEE}
 html .hero h1 .script.nm{color:#F2B9C4}
 html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#F2C6CE,#E9A9B6);-webkit-background-clip:text;background-clip:text}
