@@ -49,15 +49,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 
 /* Cabecera */
 /* Burdeos: cabecera y franja de meses/semanas */
-html .hero{background:#521B28;box-shadow:0 0 0 100vmax #521B28;clip-path:inset(-100vmax -100vmax 0 -100vmax);margin-bottom:24px}
+html .hero{position:relative;isolation:isolate;margin-bottom:28px}
+html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#5E2533 0%,#5E2533 62%,rgba(94,37,51,.72) 76%,rgba(94,37,51,.32) 89%,rgba(94,37,51,0) 100%)}
+html body{overflow-x:clip}
 html .hero h1{color:#F7EDEE}
 html .hero h1 .script.nm{color:#F2B9C4}
 html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#F2C6CE,#E9A9B6);-webkit-background-clip:text;background-clip:text}
 html .hero .sub__rule{background:#E9A9B6}
-html .months{background:rgba(82,27,40,.97);border-bottom-color:rgba(255,255,255,.12)}
-html .months .chip{color:#EBCBD0}
+html .months{background:linear-gradient(180deg,rgba(150,82,98,.94),rgba(138,72,88,.94));border-bottom-color:rgba(255,255,255,.18)}
+html .months .chip{color:#F6E2E6}
 html .months .chip:hover{color:#fff;background:rgba(255,255,255,.12)}
-html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#521B28}
+html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#6E2E3D}
 html .months .arrow{background:rgba(255,255,255,.14);color:#F7EDEE}
 html .months .arrow:hover{background:rgba(255,255,255,.24)}
 
