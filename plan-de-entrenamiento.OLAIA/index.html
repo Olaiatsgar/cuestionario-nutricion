@@ -296,6 +296,9 @@ body.sum-on{overflow:hidden}
 .dalt__de{margin:0;font-size:13px;font-weight:500;color:var(--accent)}
 .dalt__list ul{margin:4px 0 0;padding-left:18px;font-size:15px}
 .dalt__list ul + .dalt__de{margin-top:8px}
+.dimg{margin:0}
+.dimg img{display:block;width:100%;height:auto;border-radius:14px;background:var(--rosa-soft)}
+.dimg figcaption{margin-top:6px;font-size:12px;color:var(--text-dim);text-align:center}
 .dmeal__n{flex:1;min-width:0;font-size:16px;font-weight:400}
 .dmeal__n small{display:block;font-size:12px;color:var(--text-dim);font-weight:300}
 .dmeal__c{font-size:12px;color:var(--text-faint)}
@@ -837,12 +840,12 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     // Información nutricional del plan (kcal y macros por tipo de día)
     // De momento todos los días iguales: se muestra solo el plan de días de entreno (el de descanso queda guardado para más adelante)
     unDia: true,
-    info: { pct:{ h:51, g:22, p:27 }, entreno:{ kcal:2206, h:282, p:146, g:53 }, descanso:{ kcal:2017, h:240, p:128, g:61 } },
+    info: { pct:{ h:52, g:22, p:26 }, entreno:{ kcal:2205, h:287, p:140, g:54 }, descanso:{ kcal:2017, h:240, p:128, g:61 } },
     pautas: [],
     comidas: [
       { id:'c1', name:{ entreno:'Desayuno', descanso:'Desayuno' },
         alt:{ entreno:[{ de:'75 g de pan', por:['1 bagel','50 g de crema de arroz'] }, { de:'50 g de pechuga de pollo', por:['100 g de claras de huevo','50 g de pechuga de pavo'] }] }, ops:[
-        { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','20 g de crema de cacahuete','1 plátano','1 huevo mediano (60 g)','50 g de queso cottage'],
+        { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','20 g de crema de cacahuete','1 plátano','60 g de aguacate','50 g de queso cottage'],
                    descanso:['50 g de pan tradicional','75 g de pechuga de pavo','75 g de aguacate','30 g de queso cottage'] } ] },
       { id:'c2', name:{ entreno:'Comida', descanso:'Comida' },
         alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'90 g de ternera', por:['110 g de lomo de cerdo','70 g de lomo embuchado'] }] }, ops:[
@@ -908,6 +911,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       if (!ops.length) return;
       var body = ops.length ? ops.map(function(o){ var it = o[type] || []; o = { name: solo ? '' : o.name }; return '<div class="dop'+(o.name?'':' dop--solo')+'">'+(o.name?'<span class="dop__n">'+o.name+'</span>':'')+(it.length ? '<ul>'+it.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join('') : pend('Pendiente de añadir.');
       var sb = c.sub && (typeof c.sub === 'string' ? c.sub : c.sub[type]);
+      var im = c.img && c.img[type];
+      if (im) body = '<figure class="dimg"><img src="'+im.src+'" alt="'+im.alt+'" loading="lazy" width="540" height="493"><figcaption>Una idea de cómo puede quedar</figcaption></figure>' + body;
       var alts = c.alt && c.alt[type];
       if (alts && alts.length) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+alts.map(function(x){ return '<p class="dalt__de">En lugar de '+x.de+':</p><ul>'+x.por.map(function(p){ return '<li>'+p+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
       var nm = typeof c.name === 'string' ? c.name : c.name[type];
