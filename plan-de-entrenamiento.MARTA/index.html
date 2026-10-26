@@ -299,6 +299,15 @@ body.sum-on{overflow:hidden}
 .dimg{margin:0}
 .dimg img{display:block;width:100%;height:auto;border-radius:14px;background:var(--rosa-soft)}
 .dimg figcaption{margin-top:6px;font-size:12px;color:var(--text-dim);text-align:center}
+.dfoto img{display:block;width:100%;height:auto;border-radius:10px}
+.dimg__c{margin:6px 0 0;font-size:12px;color:var(--text-dim);text-align:center}
+.dmini{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--bg-elevated);box-shadow:0 0 0 1px var(--border-strong)}
+.dlado{display:flex;gap:12px;align-items:flex-start}
+.dlado__l{flex:1;min-width:0}
+.dlado__img{width:88px;height:88px;border-radius:12px;object-fit:cover;flex:none;margin-top:10px}
+.dlb{position:fixed;inset:0;z-index:50;background:rgba(252,242,243,.94);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px}
+.dlb img{max-width:100%;max-height:80vh;border-radius:16px;box-shadow:0 12px 40px rgba(60,30,35,.18)}
+.dlb p{margin:0;color:var(--text-dim);font-size:13px}
 .dmeal__n{flex:1;min-width:0;font-size:16px;font-weight:400}
 .dmeal__n small{display:block;font-size:12px;color:var(--text-dim);font-weight:300}
 .dmeal__c{font-size:12px;color:var(--text-faint)}
@@ -840,26 +849,28 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     // Información nutricional del plan (kcal y macros por tipo de día)
     // De momento todos los días iguales: se muestra solo el plan de días de entreno (el de descanso queda guardado para más adelante)
     unDia: true,
+    // Cómo se ve la foto de una comida: 'boton' (botón Ver foto), 'mini' (miniatura junto al nombre), 'lado' (foto pequeña junto a la lista)
+    fotoModo: 'mini',
     info: { pct:{ h:52, g:22, p:26 }, entreno:{ kcal:2205, h:287, p:140, g:54 }, descanso:{ kcal:2017, h:240, p:128, g:61 } },
     pautas: [],
     comidas: [
-      { id:'c1', name:{ entreno:'Desayuno', descanso:'Desayuno' },
+      { id:'c1', name:{ entreno:'Desayuno', descanso:'Desayuno' }, img:{ entreno:{ src:'desayuno.jpg', alt:'Bagel con crema de cacahuete y plátano, y bagel con queso cottage, aguacate y pavo' } },
         alt:{ entreno:[{ de:'75 g de pan', por:['1 bagel','50 g de crema de arroz'] }, { de:'50 g de pechuga de pollo', por:['100 g de claras de huevo','50 g de pechuga de pavo'] }] }, ops:[
         { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','20 g de crema de cacahuete','1 plátano','60 g de aguacate','50 g de queso cottage'],
                    descanso:['50 g de pan tradicional','75 g de pechuga de pavo','75 g de aguacate','30 g de queso cottage'] } ] },
-      { id:'c2', name:{ entreno:'Comida', descanso:'Comida' },
+      { id:'c2', name:{ entreno:'Comida', descanso:'Comida' }, img:{ entreno:{ src:'comida.jpg', alt:'Gnocchi con ternera, verduras salteadas y piña con nueces' } },
         alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'90 g de ternera', por:['110 g de lomo de cerdo','70 g de lomo embuchado'] }] }, ops:[
         { name:'', entreno:['80 g de arroz','100 g de salteado de verduras','90 g de ternera','100 g de piña','10 g de nueces naturales'],
                    descanso:['80 g de arroz blanco o pasta (en seco)','100 g de filete de ternera','100 g de salteado de verduras','10 ml de aceite de oliva','100 g de piña natural'] } ] },
-      { id:'c3', name:{ entreno:'Merienda o post entreno', descanso:'Merienda' }, ops:[
+      { id:'c3', name:{ entreno:'Merienda o post entreno', descanso:'Merienda' }, img:{ entreno:{ src:'merienda.jpg', alt:'Papilla de cereales con proteína y chocolate negro' } }, ops:[
         { name:'Opción 1', entreno:['60 g de papilla multicereales','30 g de proteína whey','15 g de chocolate negro 85 %'],
                            descanso:['60 g de pan tradicional','60 g de jamón serrano','100 g de tomate (opcional)'] },
         { name:'Opción 2', entreno:[], descanso:[] } ] },
-      { id:'c4', name:{ entreno:'Cena', descanso:'Cena' },
+      { id:'c4', name:{ entreno:'Cena', descanso:'Cena' }, img:{ entreno:{ src:'cena.jpg', alt:'Fajita de pollo con verduras' } },
         alt:{ entreno:[{ de:'50 g de arroz', por:['50 g de pasta','60 g de tortillas para fajitas (1 fajita grande)','100 g de gnocchi','200 g de patata cocida'] }, { de:'100 g de pechuga de pollo', por:['100 g de pechuga de pavo'] }] }, ops:[
         { name:'', entreno:['50 g de arroz','100 g de verduras','100 g de pechuga de pollo'],
                    descanso:['250 g de patata cocida','100 g de pescado blanco (dorada, lubina…)','100 g de salteado de verduras'] } ] },
-      { id:'c5', name:{ entreno:'Precama o recena', descanso:'Precama' }, ops:[
+      { id:'c5', name:{ entreno:'Precama o recena', descanso:'Precama' }, img:{ entreno:{ src:'precama.jpg', alt:'Yogur griego con frutos rojos y cornflakes' } }, ops:[
         { name:'', entreno:['125 g de yogur griego ligero natural','100 g de frutos rojos','25 g de cornflakes 0 % azúcar añadido'],
                    descanso:['250 g de yogur griego ligero','100 g de frutos rojos','10 g de crema de almendras','15 g de chocolate negro 85 %'] } ] }
     ],
@@ -912,11 +923,14 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       var body = ops.length ? ops.map(function(o){ var it = o[type] || []; o = { name: solo ? '' : o.name }; return '<div class="dop'+(o.name?'':' dop--solo')+'">'+(o.name?'<span class="dop__n">'+o.name+'</span>':'')+(it.length ? '<ul>'+it.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join('') : pend('Pendiente de añadir.');
       var sb = c.sub && (typeof c.sub === 'string' ? c.sub : c.sub[type]);
       var im = c.img && c.img[type];
-      if (im) body = '<figure class="dimg"><img src="'+im.src+'" alt="'+im.alt+'" loading="lazy" width="540" height="493"><figcaption>Una idea de cómo puede quedar</figcaption></figure>' + body;
+      var fm = (location.search.match(/foto=(\w+)/)||[])[1] || DIETA.fotoModo, mini = '';
+      if (im && fm === 'boton') body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Ver foto</button><div class="dalt__list dfoto" hidden><img src="'+im.src+'" alt="'+im.alt+'" loading="lazy"><p class="dimg__c">Una idea de cómo puede quedar</p></div></div>';
+      if (im && fm === 'mini') mini = '<img class="dmini" src="'+im.src+'" alt="" data-zoom="'+im.src+'" data-zalt="'+im.alt+'">';
+      if (im && fm === 'lado') body = '<div class="dlado"><div class="dlado__l">'+body+'</div><img class="dlado__img" src="'+im.src+'" alt="'+im.alt+'" data-zoom="'+im.src+'" data-zalt="'+im.alt+'"></div>';
       var alts = c.alt && c.alt[type];
       if (alts && alts.length) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+alts.map(function(x){ return '<p class="dalt__de">En lugar de '+x.de+':</p><ul>'+x.por.map(function(p){ return '<li>'+p+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
       var nm = typeof c.name === 'string' ? c.name : c.name[type];
-      h += dfold('<span class="dmeal__n">'+nm+(sb?'<small>'+sb+'</small>':'')+'</span><span class="dmeal__c">'+(ops.length > 1 ? ops.length+' opciones' : '')+'</span>', body);
+      h += dfold(mini+'<span class="dmeal__n">'+nm+(sb?'<small>'+sb+'</small>':'')+'</span><span class="dmeal__c">'+(ops.length > 1 ? ops.length+' opciones' : '')+'</span>', body);
     });
     h += '</section>';
     if (DIETA.equiv.length) h += '<section class="dmeals"><h3>Equivalencias</h3>'+dfold('<span class="dmeal__n">Qué puedo cambiar por qué<small>dentro de cada grupo</small></span>', DIETA.equiv.map(function(g){ return '<div class="dop"><span class="dop__n">'+g.g+'</span>'+(g.items.length ? '<ul>'+g.items.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>' : pend())+'</div>'; }).join(''))+'</section>';
@@ -940,6 +954,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function dget(el){ var w = el.closest('.dform'), k = w.getAttribute('data-dw-key'); store[k] = store[k] || {}; return { w:w, d:store[k], k:k }; }
   function dclean(d){ var o = {}; Object.keys(d).forEach(function(k){ if (k.charAt(0) !== '_' && d[k] !== '' && d[k] != null && !(Array.isArray(d[k]) && !d[k].length)) o[k] = d[k]; }); return o; }
   dietEl.addEventListener('click', function(e){
+    var zm = e.target.closest('[data-zoom]'); if (zm){ e.stopPropagation(); var lb = document.createElement('div'); lb.className = 'dlb'; lb.innerHTML = '<img src="'+zm.getAttribute('data-zoom')+'" alt="'+zm.getAttribute('data-zalt')+'"><p>Toca para cerrar</p>'; lb.onclick = function(){ lb.remove(); }; document.body.appendChild(lb); return; }
     var ab = e.target.closest('[data-alt]'); if (ab){ var l = ab.nextElementSibling, open = l.hidden; l.hidden = !open; ab.setAttribute('aria-expanded', open); return; }
     var hd = e.target.closest('.dfold__head'); if (hd){ toggle(hd.parentNode); return; }
     var t = e.target.closest('[data-dtype]'); if (t){ store._dtype = t.getAttribute('data-dtype'); save(); renderDiet(); return; }
