@@ -6,7 +6,7 @@
 <title>Plan de Olaia</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#5E2533">
+<meta name="theme-color" content="#B5546E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Olaia">
@@ -48,21 +48,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-inline:20px}
 
 /* Cabecera */
-/* Burdeos: cabecera y franja de meses/semanas */
+/* Rosa palo (antes burdeos): cabecera y franja de meses/semanas */
 html .hero{position:relative;isolation:isolate;margin-bottom:28px;padding-top:calc(64px + env(safe-area-inset-top,0px))}
-html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#5E2533 0%,#5E2533 62%,rgba(94,37,51,.72) 76%,rgba(94,37,51,.32) 89%,rgba(94,37,51,0) 100%)}
+html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#B5546E 0%,#B5546E 62%,rgba(181,84,110,.72) 76%,rgba(181,84,110,.32) 89%,rgba(181,84,110,0) 100%)}
 html body{overflow-x:clip}
 /* Zona de la barra de estado del móvil (app instalada): burdeos y la franja de meses se pega debajo */
-html body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#5E2533;z-index:20;pointer-events:none}
+html body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#B5546E;z-index:20;pointer-events:none}
 html .months{top:env(safe-area-inset-top,0px)}
 html .hero h1{color:#F7EDEE}
-html .hero h1 .script.nm{color:#F2B9C4}
-html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#F2C6CE,#E9A9B6);-webkit-background-clip:text;background-clip:text}
-html .hero .sub__rule{background:#E9A9B6}
-html .months{background:linear-gradient(180deg,rgba(150,82,98,.94),rgba(138,72,88,.94));border-bottom-color:rgba(255,255,255,.18)}
+html .hero h1 .script.nm{color:#FCE1E7}
+html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#FFF6F8,#F9E3E8);-webkit-background-clip:text;background-clip:text}
+html .hero .sub__rule{background:#F9E3E8}
+html .months{background:linear-gradient(180deg,rgba(200,110,134,.94),rgba(188,96,121,.94));border-bottom-color:rgba(255,255,255,.18)}
 html .months .chip{color:#F6E2E6}
 html .months .chip:hover{color:#fff;background:rgba(255,255,255,.12)}
-html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#6E2E3D}
+html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#7A4552}
 html .months .arrow{background:rgba(255,255,255,.14);color:#F7EDEE}
 html .months .arrow:hover{background:rgba(255,255,255,.24)}
 
@@ -304,11 +304,24 @@ body.sum-on{overflow:hidden}
 .dinfo td{color:var(--text-dim)}
 .dinfo td.dpct{width:3.5em;font-size:13px;color:var(--accent);font-weight:500}
 .dinfo td.is-on{color:var(--ink);font-weight:600}
+.dinfo .dpc{margin-left:8px;font-size:12px;font-weight:500;color:var(--accent)}
+.dinfo td:not(.is-on){opacity:.45}
+.dinfo thead th.is-on{color:var(--accent);font-weight:600}
+.dmode{margin-bottom:12px}
 .dinfo thead th.is-on{color:var(--rosa-deep)}
 .dop--solo{padding-top:0;border-top:0}
 .dintro p{margin:6px 0 0;font-size:15px;line-height:1.55;color:var(--ink-2)}
 .dintro ul{margin-top:10px}
 .dalt{padding-top:10px;border-top:1px dashed var(--border-strong)}
+.dfold--off{position:relative}
+.dfold--off .dmeal__n{padding-right:92px}
+.doff__btn{position:absolute;top:36px;right:58px;transform:translateY(-50%);font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--border-strong);background:var(--bg-deep);color:var(--ink-2);white-space:nowrap}
+.doff__btn[aria-expanded="true"]{border:2px solid var(--rosa-deep);color:var(--ink);background:var(--bg-elevated)}
+.doff{background:var(--rosa-soft);border-radius:12px;padding:10px 14px}
+.doff__note{margin:2px 0 0;font-size:13px;font-style:italic;color:var(--text-dim)}
+.doff ul{margin:6px 0 0;padding-left:18px;font-size:15px}
+.doff__alt{margin:12px 0 0;padding-top:10px;border-top:1px dashed var(--border-strong);font-size:13px;font-weight:500;color:var(--accent)}
+.doff ul.doff__altl{margin-top:4px;font-size:14px;color:var(--ink-2)}
 .dalt__btn{font-size:13px;font-weight:500;padding:7px 14px;border-radius:999px;border:1px solid var(--border-strong);background:var(--bg-deep);color:var(--ink-2)}
 .dalt__btn[aria-expanded="true"]{border:2px solid var(--rosa-deep);color:var(--ink);background:var(--bg-elevated)}
 .dalt__list{margin-top:10px;background:var(--rosa-soft);border-radius:12px;padding:10px 14px}
@@ -500,8 +513,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       ['Aducción','Lineal',['3 × 12']],
       ['Extensión de cuádriceps','Lineal',['2 × 12']],
       ['Prensa 45º','Top set + back off',['Top set 1 × 8-10','Back off 2 × 10-12']],
-      ['Prensa unilateral horizontal','Top set + back off',['Top set 1 × 8-10','Back off 1 × 10-12']],
       ['Femoral tumbado','Lineal',['3 × 12']],
+      ['Prensa unilateral horizontal','Top set + back off',['Top set 1 × 8-10','Back off 1 × 10-12']],
       ['Extensión de cuádriceps final *','50 repeticiones',['2 × 50 (2 descansos de menos de 5 segundos)']]
     ], total:'6 ejercicios · 15 series', tips:[
       '* En el último ejercicio de extensión de cuádriceps baja considerablemente de peso. Son 50 repeticiones.'
@@ -585,6 +598,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   var store = {};
   try { store = JSON.parse(localStorage.getItem('olaia-plan')||'{}') || {}; } catch(e){ store = {}; }
   function save(){ try { localStorage.setItem('olaia-plan', JSON.stringify(store)); } catch(e){} }
+  // Cuádriceps: femoral tumbado pasa a 4º y prensa unilateral a 5º → se intercambian los datos ya apuntados (una sola vez)
+  if (!store._migPi45) { Object.keys(store).forEach(function(k){ var r = store[k]; if (/^r-.*-pi$/.test(k) && r && Array.isArray(r.v)) { var t = r.v[3]; r.v[3] = r.v[4]; r.v[4] = t; } }); store._migPi45 = 1; save(); }
 
   function mondaysOf(m){
     // Una semana (lun–dom) pertenece al mes en el que cae su jueves
@@ -874,27 +889,32 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     unDia: true,
     // Cómo se ve la foto de una comida: 'boton' (botón Ver foto), 'mini' (miniatura junto al nombre), 'lado' (foto pequeña junto a la lista)
     fotoModo: 'mini',
-    info: { pct:{ h:52, g:22, p:26 }, entreno:{ kcal:2205, h:287, p:140, g:54 }, descanso:{ kcal:2017, h:240, p:128, g:61 } },
+    info: { pct:{ h:53, g:21, p:26 }, entreno:{ kcal:2003, h:262, p:131, g:47 }, off:{ kcal:1813, h:201, p:129, g:54 }, pctOff:{ h:45, g:27, p:28 }, descanso:{ kcal:2017, h:240, p:128, g:61 } },
     pautas: [],
     comidas: [
       { id:'c1', name:{ entreno:'Desayuno', descanso:'Desayuno' }, img:{ entreno:{ src:'desayuno.jpg', alt:'Bagel con crema de cacahuete y plátano, y bagel con queso cottage, aguacate y pavo' } },
+        off:{ t:'Desayuno para días OFF', items:['70 g de pan tradicional','70 g de pechuga de pavo','50 g de aguacate','1 huevo mediano'] },
         alt:{ entreno:[{ de:'75 g de pan', por:['1 bagel','50 g de crema de arroz'] }, { de:'50 g de pechuga de pollo', por:['100 g de claras de huevo','50 g de pechuga de pavo'] }] }, ops:[
-        { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','20 g de crema de cacahuete','1 plátano','60 g de aguacate','50 g de queso cottage'],
+        { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','10 g de crema de cacahuete o de almendras','1 plátano','50 g de aguacate','50 g de queso cottage'],
                    descanso:['50 g de pan tradicional','75 g de pechuga de pavo','75 g de aguacate','30 g de queso cottage'] } ] },
       { id:'c2', name:{ entreno:'Comida', descanso:'Comida' }, img:{ entreno:{ src:'comida.jpg', alt:'Gnocchi con ternera, verduras salteadas y piña con nueces' } },
-        alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'90 g de ternera', por:['110 g de lomo de cerdo','70 g de lomo embuchado'] }] }, ops:[
-        { name:'', entreno:['80 g de arroz','100 g de salteado de verduras','90 g de ternera','100 g de piña','10 g de nueces naturales'],
+        off:{ t:'Comida para días OFF', items:['70 g de arroz blanco','80 g de filete de ternera','10 g de aceite de oliva','100 g de fruta de temporada'], alt:[{ de:'70 g de arroz blanco', por:['70 g de pasta','90 g de pan','140 g de ñoquis','280 g de patata cocida o boniato'] }] },
+        alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'80 g de ternera', por:['100 g de lomo de cerdo','60 g de lomo embuchado'] }, { de:'100 g de piña', por:['100 g de kiwi (1 grande)','150 g de fresas'] }] }, ops:[
+        { name:'', entreno:['80 g de arroz','100 g de salteado de verduras','80 g de ternera','100 g de piña','10 g de nueces naturales'],
                    descanso:['80 g de arroz blanco o pasta (en seco)','100 g de filete de ternera','100 g de salteado de verduras','10 ml de aceite de oliva','100 g de piña natural'] } ] },
-      { id:'c3', name:{ entreno:'Merienda o post entreno', descanso:'Merienda' }, img:{ entreno:{ src:'merienda.jpg', alt:'Papilla de cereales con proteína y chocolate negro' } }, ops:[
+      { id:'c3', name:{ entreno:'Merienda o post entreno', descanso:'Merienda' }, img:{ entreno:{ src:'merienda.jpg', alt:'Papilla de cereales con proteína y chocolate negro' } },
+        off:{ t:'Merienda para días OFF', nota:'(Puedes sustituirla por la merienda habitual de los días de entreno)', items:['50 g de mozzarella fresca light','50 g de jamón serrano','70 g de pan tradicional'] }, ops:[
         { name:'Opción 1', entreno:['60 g de papilla multicereales','30 g de proteína whey','15 g de chocolate negro 85 %'],
                            descanso:['60 g de pan tradicional','60 g de jamón serrano','100 g de tomate (opcional)'] },
         { name:'Opción 2', entreno:[], descanso:[] } ] },
       { id:'c4', name:{ entreno:'Cena', descanso:'Cena' }, img:{ entreno:{ src:'cena.jpg', alt:'Fajita de pollo con verduras' } },
-        alt:{ entreno:[{ de:'50 g de arroz', por:['50 g de pasta','60 g de tortillas para fajitas (1 fajita grande)','100 g de gnocchi','200 g de patata cocida'] }, { de:'100 g de pechuga de pollo', por:['100 g de pechuga de pavo','100 g de pescado blanco (dorada, lubina…)'] }] }, ops:[
+        off:{ t:'Cena para días OFF', items:['100 g de pechuga de pollo','60 g de arroz blanco','100 g de verduras'], alt:[{ de:'60 g de arroz blanco', por:['60 g de pasta','75 g de pan','70 g de tortillas para fajitas','120 g de ñoquis','240 g de patata cocida o boniato'] }] },
+        alt:{ entreno:[{ de:'50 g de arroz', por:['50 g de pasta','60 g de tortillas para fajitas (1 fajita grande)','100 g de gnocchi','200 g de patata cocida o boniato'] }, { de:'100 g de pechuga de pollo', por:['100 g de pechuga de pavo','100 g de pescado blanco (dorada, lubina…)'] }] }, ops:[
         { name:'', entreno:['50 g de arroz','100 g de verduras','100 g de pechuga de pollo'],
                    descanso:['250 g de patata cocida','100 g de pescado blanco (dorada, lubina…)','100 g de salteado de verduras'] } ] },
-      { id:'c5', name:{ entreno:'Precama o recena', descanso:'Precama' }, img:{ entreno:{ src:'precama.jpg', alt:'Yogur griego con frutos rojos y cornflakes' } }, ops:[
-        { name:'', entreno:['125 g de yogur griego ligero natural','100 g de frutos rojos','25 g de cornflakes 0 % azúcar añadido'],
+      { id:'c5', name:{ entreno:'Precama o recena', descanso:'Precama' }, img:{ entreno:{ src:'precama.jpg', alt:'Yogur griego con frutos rojos' } },
+        off:{ t:'Precama para días OFF', items:['60 g de yogur griego ligero natural','100 g de frutos rojos','15 g de chocolate negro 85 %'] }, ops:[
+        { name:'', entreno:['100 g de yogur griego ligero natural','100 g de frutos rojos'],
                    descanso:['250 g de yogur griego ligero','100 g de frutos rojos','10 g de crema de almendras','15 g de chocolate negro 85 %'] } ] }
     ],
     equiv: []
@@ -927,6 +947,19 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     h += '<button type="button" class="btn btn-primary dsend" data-dsend>Enviar revisión</button><p class="send__status" data-dsend-st>'+(d._sent ? 'Enviado el '+d._sent+'.' : '')+'</p>';
     return h+'</div>';
   }
+  // Foto del plan nutricional vigente: va con cada revisión para comparar calorías y peso más adelante
+  function planNutri(){
+    var I = DIETA.info, items = function(c, t){ var o = (c.ops||[]).filter(function(x){ return (x[t]||[]).length; })[0]; return o ? o[t].slice() : []; };
+    return {
+      modo: store._dmode === 'off' ? 'Día OFF' : 'Día de entreno',
+      info: { entreno: { kcal:I.entreno.kcal, h:I.entreno.h, p:I.entreno.p, g:I.entreno.g, pct:I.pct || null },
+              off: I.off ? { kcal:I.off.kcal, h:I.off.h, p:I.off.p, g:I.off.g, pct:I.pctOff || null } : null },
+      comidas: DIETA.comidas.map(function(c){
+        var alt = function(l){ return (l||[]).map(function(x){ return { de: x.t ? x.t.replace(/:$/,'') : 'En lugar de '+x.de, por: x.por.slice() }; }); };
+        return { nombre: typeof c.name === 'string' ? c.name : c.name.entreno, entreno: items(c, 'entreno'), altEntreno: alt(c.alt && c.alt.entreno),
+                 off: c.off ? c.off.items.slice() : null, nota: c.off && c.off.nota || '', altOff: c.off ? alt(c.off.alt) : [] }; })
+    };
+  }
   function renderDiet(){
     var type = (!DIETA.unDia && store._dtype === 'descanso') ? 'descanso' : 'entreno';
     var h = '<div class="diet">';
@@ -935,7 +968,11 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     var cell = function(t,v){ return '<td'+((t==='entreno')===on?' class="is-on"':'')+'>'+v+'</td>'; };
     var row = function(l,k,u){ return '<tr><th scope="row">'+l+'</th>'+cell('entreno',I.entreno[k]+u)+cell('descanso',I.descanso[k]+u)+'</tr>'; };
     var hi = '<section class="dcard dinfo"><h3>Información nutricional</h3><div class="dinfo__t"><table><thead><tr><th></th><th'+(on?' class="is-on"':'')+'>Días ON</th><th'+(on?'':' class="is-on"')+'>Días OFF</th></tr></thead><tbody>'+row('Kcal','kcal','')+row('Hidratos','h',' g')+row('Proteína','p',' g')+row('Grasa','g',' g')+'</tbody></table></div></section>';
-    if (DIETA.unDia) hi = '<section class="dcard dinfo"><h3>Información nutricional</h3><div class="dinfo__t"><table><tbody>'+[['Kcal','kcal',''],['Hidratos','h',' g'],['Proteína','p',' g'],['Grasa','g',' g']].map(function(r){ return '<tr><th scope="row">'+r[0]+'</th><td class="is-on">'+I.entreno[r[1]]+r[2]+'</td><td class="dpct">'+(I.pct && I.pct[r[1]] ? I.pct[r[1]]+' %' : '')+'</td></tr>'; }).join('')+'</tbody></table></div></section>';
+    var irow = [['Kcal','kcal',''],['Hidratos','h',' g'],['Proteína','p',' g'],['Grasa','g',' g']];
+    var ival = function(v, pc, k, u){ return v[k]+u+(pc && pc[k] ? '<small class="dpc">'+pc[k]+' %</small>' : ''); };
+    var dOff = !!(DIETA.unDia && I.off && store._dmode === 'off'), cOn = dOff ? '' : ' class="is-on"', cOff = dOff ? ' class="is-on"' : '';
+    if (DIETA.unDia) hi = '<section class="dcard dinfo"><h3>Información nutricional</h3><div class="dinfo__t"><table>'+(I.off ? '<thead><tr><th></th><th'+cOn+'>Entreno</th><th'+cOff+'>Días OFF</th></tr></thead>' : '')+'<tbody>'+irow.map(function(r){ return '<tr><th scope="row">'+r[0]+'</th><td'+(I.off ? cOn : ' class="is-on"')+'>'+ival(I.entreno, I.pct, r[1], r[2])+'</td>'+(I.off ? '<td'+cOff+'>'+ival(I.off, I.pctOff, r[1], r[2])+'</td>' : '')+'</tr>'; }).join('')+'</tbody></table></div></section>';
+    if (DIETA.unDia && I.off) hi = '<div class="dtype dmode" role="radiogroup" aria-label="Tipo de día"><button type="button" data-dmode="on" aria-pressed="'+(!dOff)+'">Día de entreno</button><button type="button" data-dmode="off" aria-pressed="'+dOff+'">Día OFF</button></div>' + hi;
     if (DIETA.intro) hi += '<section class="dcard dintro"><h3>'+DIETA.intro.t+'</h3><p>'+DIETA.intro.p+'</p><ul>'+DIETA.intro.items.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ul></section>';
     h = '<div class="diet">' + hi + h.slice('<div class="diet">'.length);
     if (DIETA.pautas.length) h += '<section class="dcard"><h3>Pautas</h3><ul>'+DIETA.pautas.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ul></section>';
@@ -951,8 +988,13 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       if (im && fm === 'mini') mini = '<img class="dmini" src="'+im.src+'" alt="">';
       if (im && fm === 'lado') body = '<div class="dlado"><div class="dlado__l">'+body+'</div><img class="dlado__img" src="'+im.src+'" alt="'+im.alt+'" data-zoom="'+im.src+'" data-zalt="'+im.alt+'"></div>';
       var alts = c.alt && c.alt[type];
-      if (alts && alts.length) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+alts.map(function(x){ return '<p class="dalt__de">En lugar de '+x.de+':</p><ul>'+x.por.map(function(p){ return '<li>'+p+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
+      if (alts && alts.length) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+alts.map(function(x){ return '<p class="dalt__de">'+(x.t ? x.t : 'En lugar de '+x.de+':')+'</p><ul>'+x.por.map(function(p){ return '<li>'+p+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
       var nm = typeof c.name === 'string' ? c.name : c.name[type];
+      if (c.off && dOff) {
+        body = '<div class="dop dop--solo">'+(c.off.nota ? '<p class="doff__note">'+c.off.nota+'</p>' : '')+'<ul>'+c.off.items.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul></div>';
+        if (c.off.alt) body += '<div class="dalt"><button type="button" class="dalt__btn" data-alt aria-expanded="false">Alternativas</button><div class="dalt__list" hidden>'+c.off.alt.map(function(a){ return '<p class="dalt__de">En lugar de '+a.de+':</p><ul>'+a.por.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>'; }).join('')+'</div></div>';
+        h += dfold(mini+'<span class="dmeal__n">'+nm+'<small>Menú de día OFF</small></span>', body);
+        return; }
       h += dfold(mini+'<span class="dmeal__n">'+nm+(sb?'<small>'+sb+'</small>':'')+'</span><span class="dmeal__c">'+(ops.length > 1 ? ops.length+' opciones' : '')+'</span>', body);
     });
     h += '</section>';
@@ -978,8 +1020,10 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function dclean(d){ var o = {}; Object.keys(d).forEach(function(k){ if (k.charAt(0) !== '_' && d[k] !== '' && d[k] != null && !(Array.isArray(d[k]) && !d[k].length)) o[k] = d[k]; }); return o; }
   dietEl.addEventListener('click', function(e){
     var zm = e.target.closest('[data-zoom]'); if (zm){ e.stopPropagation(); var lb = document.createElement('div'); lb.className = 'dlb'; lb.innerHTML = '<img src="'+zm.getAttribute('data-zoom')+'" alt="'+zm.getAttribute('data-zalt')+'"><p>Toca para cerrar</p>'; lb.onclick = function(){ lb.remove(); }; document.body.appendChild(lb); return; }
+    var ob = e.target.closest('[data-off]'); if (ob){ var card = ob.parentNode, pn = card.querySelector('.doff'), show = pn.hidden; pn.hidden = !show; ob.setAttribute('aria-expanded', show); if (show && !card.classList.contains('is-open')) toggle(card); return; }
     var ab = e.target.closest('[data-alt]'); if (ab){ var l = ab.nextElementSibling, open = l.hidden; l.hidden = !open; ab.setAttribute('aria-expanded', open); return; }
     var hd = e.target.closest('.dfold__head'); if (hd){ toggle(hd.parentNode); return; }
+    var dm = e.target.closest('[data-dmode]'); if (dm){ store._dmode = dm.getAttribute('data-dmode'); save(); renderDiet(); return; }
     var t = e.target.closest('[data-dtype]'); if (t){ store._dtype = t.getAttribute('data-dtype'); save(); renderDiet(); return; }
     var ws = e.target.closest('[data-dsel]'); if (ws){ store._dsel = ws.getAttribute('data-dsel'); save(); renderDiet(); dietEl.querySelector('.dquest').scrollIntoView({block:'start'}); return; }
     var b = e.target.closest('[data-dw]');
@@ -1003,7 +1047,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       if (pesos.length) datos.peso = pesos.join(' · ');
       if (!Object.keys(datos).length){ stEl.textContent = 'Responde al menos una pregunta antes de enviar.'; stEl.className = 'send__status err'; return; }
       var mon = W8[wi].mon;
-      var payload = { origen:'avances-entreno', tipo:'dieta', clienta:CLIENTA, plan:'Dieta', semanas:[{ mes:fmtMonthY.format(W8[wi].m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion:null, dieta:datos, entrenos:[] }] };
+      var payload = { origen:'avances-entreno', tipo:'dieta', clienta:CLIENTA, plan:'Dieta', semanas:[{ mes:fmtMonthY.format(W8[wi].m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion:null, dieta:datos, entrenos:[] }], planNutri: planNutri() };
       sb.disabled = true; stEl.className = 'send__status'; stEl.textContent = 'Enviando…';
       fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) })
       .then(function(){ var now = new Date(); q.d._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); save();
