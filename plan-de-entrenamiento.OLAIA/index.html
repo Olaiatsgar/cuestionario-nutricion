@@ -424,6 +424,10 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   <div class="install__txt"><b>Instálala como app</b><span id="installHow"></span></div>
   <button type="button" class="install__btn" id="installBtn" hidden>Instalar</button>
   <button type="button" class="install__x" id="installX" aria-label="Cerrar aviso">×</button>
+</div><div class="install" id="remind" hidden>
+  <div class="install__txt"><b>¿Envías tus avances?</b><span>Hace más de 7 días que no los envías. Así tu entrenadora puede revisar cómo vas.</span></div>
+  <button type="button" class="install__btn" id="remindBtn">Enviar ahora</button>
+  <button type="button" class="install__x" id="remindX" aria-label="Cerrar aviso">×</button>
 </div></div>
 
 <div class="wrap"><div class="tabs" role="tablist" aria-label="Secciones">
@@ -1113,7 +1117,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       body: JSON.stringify({ origen:'avances-entreno', clienta:CLIENTA, plan:'Fase de ganancia', semanas:semanas }) })
     .then(function(){
       var now = new Date();
-      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); delete store._pending; save();
+      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); store._sentTs = now.getTime(); delete store._pending; save();
+      document.getElementById('remind').hidden = true;
       setSt('¡Enviado! Tu entrenadora ya tiene tus avances. Puedes seguir apuntando y volver a enviar cuando quieras.','ok');
       sendBtn.textContent = 'Enviado ✓'; setTimeout(function(){ sendBtn.textContent = 'Enviar avances'; }, 4000);
     })
@@ -1123,6 +1128,16 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   sendBtn.addEventListener('click', function(){ doSend(false); });
   window.addEventListener('online', function(){ if (store._pending) doSend(true); });
   if (store._pending && navigator.onLine !== false) setTimeout(function(){ doSend(true); }, 1500);
+  // Recordatorio: más de 7 días sin enviar avances (cuenta desde el último envío o desde que empezó a usar la app)
+  (function(){
+    var now = Date.now(), DAY = 864e5;
+    if (!store._firstUse){ store._firstUse = now; save(); }
+    if (store._sent && !store._sentTs){ store._sentTs = now; save(); } // envíos antiguos sin fecha exacta: se empieza a contar hoy
+    var desde = store._sentTs || store._firstUse, box = document.getElementById('remind');
+    if (now - desde > 7*DAY && !store._pending && collect().length) box.hidden = false;
+    document.getElementById('remindX').addEventListener('click', function(){ box.hidden = true; });
+    document.getElementById('remindBtn').addEventListener('click', function(){ doSend(false); sendBtn.scrollIntoView({block:'center'}); });
+  })();
 
   // --- Resumen: el plan de la semana en una pantalla aparte ---
   var sum = document.createElement('div');
