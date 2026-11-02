@@ -148,6 +148,11 @@ body.sum-on{overflow:hidden}
 .fold > div{overflow:hidden;min-height:0}
 .week__body{display:flex;flex-direction:column;gap:10px;padding:0 16px 18px}
 .is-now{border-color:var(--rosa-deep)}
+/* Semanas y meses ya pasados: en gris (se pueden seguir abriendo) */
+.week.is-past{opacity:.55;filter:grayscale(.7)}
+.week.is-past:hover,.week.is-past.is-open{opacity:.85}
+.chip.is-past:not([aria-pressed="true"]){opacity:.5}
+.log__prev{display:block;font-size:11px;font-weight:400;color:var(--text-faint);margin-top:1px}
 .now-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rosa-deep);margin-left:8px;vertical-align:middle}
 
 /* Entrenamiento (segundo nivel) */
@@ -554,8 +559,11 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   }
   function exList(w,lk){
     var log = store[lk] || {v:[]}, ro = log.saved ? ' readonly' : '';
+    // Semana anterior (mismo entreno): lk = 'r-AAAA-M-D-id'
+    var pm = lk.match(/^r-(\d+)-(\d+)-(\d+)-(\w+)$/), prev = {v:[]};
+    if (pm){ var pmon = addDays(new Date(+pm[1], +pm[2]-1, +pm[3]), -7); prev = store['r-'+key(pmon)+'-'+pm[4]] || {v:[]}; }
     return '<ol class="ex">'+w.ex.map(function(e,i){
-      var v = log.v[i] || [], sets = setsOf(e);
+      var v = log.v[i] || [], sets = setsOf(e), pv = prev.v[i] || [];
       return '<li><div class="ex__head" role="button" tabindex="0" aria-expanded="false"><span class="ex__n">'+(i+1)+'</span><div class="ex__txt"><span class="ex__name">'+e[0]+'</span>'+
         '<span class="ex__scheme">'+e[1]+'</span><span class="ex__sets">'+e[2].join('<br>')+'</span></div>'+
         '<span class="ex__count'+(filled(v)===sets.length?' is-full':'')+'">'+filled(v)+'/'+sets.length+'</span>'+chev+'</div>'+
@@ -563,6 +571,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
         sets.map(function(r){
           var si = r.i, lbl = r.l, sv = v[si] || [];
           var lab = r.t ? (r.t===1 ? 'Serie '+r.s+'<small>tramo 1</small>' : '<small>tramo '+r.t+'</small>') : lbl;
+          var ps = pv[si] || []; if (ps[0] || ps[1]) lab += '<small class="log__prev">ant.: '+esc(ps[0]||'–')+' × '+(ps[1] ? esc(ps[1])+' kg' : '–')+'</small>';
           return '<span class="log__l'+(r.t===1 && r.s>1 ? ' log__l--new' : '')+'">'+lab+'</span>'+
             '<input type="text" inputmode="numeric" data-ex="'+i+'" data-s="'+si+'" data-f="0" value="'+esc(sv[0]||'')+'"'+ro+' placeholder="–" aria-label="'+e[0]+', '+lbl+': repeticiones">'+
             '<input type="text" inputmode="decimal" data-ex="'+i+'" data-s="'+si+'" data-f="1" value="'+esc(sv[1]||'')+'"'+ro+' placeholder="kg" aria-label="'+e[0]+', '+lbl+': peso en kg">';
@@ -696,7 +705,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function monthChips(){ chipsEl.innerHTML = MONTHS.map(function(m,i){
     var lbl = clean(fmtMonth.format(m)).slice(0,3);
     if (m.getMonth()===0 || i===0) lbl += ' ' + String(m.getFullYear()).slice(2);
-    return '<button class="chip" data-i="'+i+'" aria-pressed="false">'+lbl+'</button>';
+    var past = new Date(m.getFullYear(), m.getMonth()+1, 1) <= today;
+    return '<button class="chip'+(past?' is-past':'')+'" data-i="'+i+'" aria-pressed="false">'+lbl+'</button>';
   }).join(''); document.querySelector('.months').setAttribute('aria-label','Meses'); }
   monthChips();
 
@@ -710,9 +720,9 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     var html = '<div class="month"><div class="month__title"><h2>'+fmtMonthY.format(m)+'</h2><div class="month__meta"><span>'+mons.length+(mons.length===1?' semana':' semanas')+'</span><button type="button" class="sum-btn" data-sum aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Resumen</button></div></div>';
     mons.forEach(function(mon,wi){
       var sun = addDays(mon,6);
-      var isNow = today>=mon && today<=sun;
+      var isNow = today>=mon && today<=sun, isPast = sun < today;
       var c = weekCount(mon);
-      html += '<div class="week'+(isNow?' is-now is-open':'')+'" data-mon="'+key(mon)+'" data-pop style="--d:'+(wi*0.07).toFixed(2)+'s">'+
+      html += '<div class="week'+(isNow?' is-now is-open':'')+(isPast?' is-past':'')+'" data-mon="'+key(mon)+'" data-pop style="--d:'+(wi*0.07).toFixed(2)+'s">'+
         '<button class="week__btn" aria-expanded="'+isNow+'">'+
           '<span class="week__num">Semana '+(wi+1)+(isNow?'<span class="now-dot" title="Esta semana"></span>':'')+'</span>'+
           '<span class="week__dates">'+clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(sun))+'</span>'+
@@ -737,7 +747,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     if (!document.body.classList.contains('tab-dieta') && chipsEl.querySelector('[data-wk]')) monthChips();
     Array.prototype.forEach.call(chipsEl.children,function(b,i){
       b.setAttribute('aria-pressed', i===current);
-      if (i===current) b.scrollIntoView({block:'nearest',inline:'center'});
+      if (i===current) chipsEl.scrollLeft = Math.max(0, b.offsetLeft - chipsEl.offsetLeft); // el mes elegido queda el primero; los anteriores, escondidos a la izquierda
     });
     document.getElementById('prev').disabled = current===0;
     document.getElementById('next').disabled = current===MONTHS.length-1;
@@ -1010,8 +1020,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function dWeeks(){ var a = []; MONTHS.forEach(function(m){ mondaysOf(m).forEach(function(mon){ a.push({ mon:mon, m:m }); }); }); return a; }
   function dSelIdx(W8){ var si = -1, ti = 0; W8.forEach(function(w,i){ if (store._dsel === key(w.mon)) si = i; if (today>=w.mon && today<=addDays(w.mon,6)) ti = i; }); return si > -1 ? si : ti; }
   function dietNav(W8, si){
-    chipsEl.innerHTML = W8.map(function(w,i){ var d = store['dw-'+key(w.mon)]; return '<button class="chip chip--wk" data-wk="'+key(w.mon)+'" aria-pressed="'+(i===si)+'">'+clean(fmtShort.format(w.mon))+((d&&d._sent)?' ✓':'')+'</button>'; }).join('');
-    var on = chipsEl.children[si]; if (on) on.scrollIntoView({block:'nearest',inline:'center'});
+    chipsEl.innerHTML = W8.map(function(w,i){ var d = store['dw-'+key(w.mon)]; return '<button class="chip chip--wk'+(addDays(w.mon,6) < today ? ' is-past' : '')+'" data-wk="'+key(w.mon)+'" aria-pressed="'+(i===si)+'">'+clean(fmtShort.format(w.mon))+((d&&d._sent)?' ✓':'')+'</button>'; }).join('');
+    var on = chipsEl.children[si]; if (on) chipsEl.scrollLeft = Math.max(0, on.offsetLeft - chipsEl.offsetLeft);
     document.getElementById('prev').disabled = si===0; document.getElementById('next').disabled = si===W8.length-1;
     document.querySelector('.months').setAttribute('aria-label','Semanas');
   }
