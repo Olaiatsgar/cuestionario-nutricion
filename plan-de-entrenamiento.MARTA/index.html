@@ -6,7 +6,7 @@
 <title>Plan de Marta</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#5E2533">
+<meta name="theme-color" content="#B5546E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Marta">
@@ -48,21 +48,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-inline:20px}
 
 /* Cabecera */
-/* Burdeos: cabecera y franja de meses/semanas */
+/* Rosa frambuesa (antes burdeos): cabecera y franja de meses/semanas */
 html .hero{position:relative;isolation:isolate;margin-bottom:28px;padding-top:calc(64px + env(safe-area-inset-top,0px))}
-html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#5E2533 0%,#5E2533 62%,rgba(94,37,51,.72) 76%,rgba(94,37,51,.32) 89%,rgba(94,37,51,0) 100%)}
+html .hero::before{content:'';position:absolute;top:-200px;bottom:-64px;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(180deg,#B5546E 0%,#B5546E 62%,rgba(181,84,110,.72) 76%,rgba(181,84,110,.32) 89%,rgba(181,84,110,0) 100%)}
 html body{overflow-x:clip}
 /* Zona de la barra de estado del móvil (app instalada): burdeos y la franja de meses se pega debajo */
-html body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#5E2533;z-index:20;pointer-events:none}
+html body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#B5546E;z-index:20;pointer-events:none}
 html .months{top:env(safe-area-inset-top,0px)}
 html .hero h1{color:#F7EDEE}
-html .hero h1 .script.nm{color:#F2B9C4}
-html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#F2C6CE,#E9A9B6);-webkit-background-clip:text;background-clip:text}
-html .hero .sub__rule{background:#E9A9B6}
-html .months{background:linear-gradient(180deg,rgba(150,82,98,.94),rgba(138,72,88,.94));border-bottom-color:rgba(255,255,255,.18)}
+html .hero h1 .script.nm{color:#FCE1E7}
+html .hero .sub,html .hero .eyebrow{background:linear-gradient(135deg,#FFF6F8,#F9E3E8);-webkit-background-clip:text;background-clip:text}
+html .hero .sub__rule{background:#F9E3E8}
+html .months{background:linear-gradient(180deg,rgba(200,110,134,.94),rgba(188,96,121,.94));border-bottom-color:rgba(255,255,255,.18)}
 html .months .chip{color:#F6E2E6}
 html .months .chip:hover{color:#fff;background:rgba(255,255,255,.12)}
-html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#6E2E3D}
+html .months .chip[aria-pressed="true"]{background:#F7EDEE;color:#7A4552}
 html .months .arrow{background:rgba(255,255,255,.14);color:#F7EDEE}
 html .months .arrow:hover{background:rgba(255,255,255,.24)}
 
@@ -148,6 +148,13 @@ body.sum-on{overflow:hidden}
 .fold > div{overflow:hidden;min-height:0}
 .week__body{display:flex;flex-direction:column;gap:10px;padding:0 16px 18px}
 .is-now{border-color:var(--rosa-deep)}
+.rec-ask{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rec-ask button{font-size:13px;font-weight:500;padding:8px 14px;border-radius:999px;border:1px solid var(--border-strong);background:var(--bg-elevated);color:var(--ink)}
+.rec-ask .rec-ask__go{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+/* Semanas y meses ya pasados: en gris (se pueden seguir abriendo) */
+.week.is-past{opacity:.55;filter:grayscale(.7)}
+.week.is-past:hover,.week.is-past.is-open{opacity:.85}
+.chip.is-past:not([aria-pressed="true"]){opacity:.5}
 .now-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rosa-deep);margin-left:8px;vertical-align:middle}
 
 /* Entrenamiento (segundo nivel) */
@@ -424,6 +431,10 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   <div class="install__txt"><b>Instálala como app</b><span id="installHow"></span></div>
   <button type="button" class="install__btn" id="installBtn" hidden>Instalar</button>
   <button type="button" class="install__x" id="installX" aria-label="Cerrar aviso">×</button>
+</div><div class="install" id="remind" hidden>
+  <div class="install__txt"><b>¿Envías tus avances?</b><span>Hace más de 7 días que no los envías. Así tu entrenadora puede revisar cómo vas.</span></div>
+  <button type="button" class="install__btn" id="remindBtn">Enviar ahora</button>
+  <button type="button" class="install__x" id="remindX" aria-label="Cerrar aviso">×</button>
 </div></div>
 
 <div class="wrap"><div class="tabs" role="tablist" aria-label="Secciones">
@@ -677,7 +688,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function monthChips(){ chipsEl.innerHTML = MONTHS.map(function(m,i){
     var lbl = clean(fmtMonth.format(m)).slice(0,3);
     if (m.getMonth()===0 || i===0) lbl += ' ' + String(m.getFullYear()).slice(2);
-    return '<button class="chip" data-i="'+i+'" aria-pressed="false">'+lbl+'</button>';
+    var past = new Date(m.getFullYear(), m.getMonth()+1, 1) <= today;
+    return '<button class="chip'+(past?' is-past':'')+'" data-i="'+i+'" aria-pressed="false">'+lbl+'</button>';
   }).join(''); document.querySelector('.months').setAttribute('aria-label','Meses'); }
   monthChips();
 
@@ -691,9 +703,9 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     var html = '<div class="month"><div class="month__title"><h2>'+fmtMonthY.format(m)+'</h2><div class="month__meta"><span>'+mons.length+(mons.length===1?' semana':' semanas')+'</span><button type="button" class="sum-btn" data-sum aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Resumen</button></div></div>';
     mons.forEach(function(mon,wi){
       var sun = addDays(mon,6);
-      var isNow = today>=mon && today<=sun;
+      var isNow = today>=mon && today<=sun, isPast = sun < today;
       var c = weekCount(mon);
-      html += '<div class="week'+(isNow?' is-now is-open':'')+'" data-mon="'+key(mon)+'" data-pop style="--d:'+(wi*0.07).toFixed(2)+'s">'+
+      html += '<div class="week'+(isNow?' is-now is-open':'')+(isPast?' is-past':'')+'" data-mon="'+key(mon)+'" data-pop style="--d:'+(wi*0.07).toFixed(2)+'s">'+
         '<button class="week__btn" aria-expanded="'+isNow+'">'+
           '<span class="week__num">Semana '+(wi+1)+(isNow?'<span class="now-dot" title="Esta semana"></span>':'')+'</span>'+
           '<span class="week__dates">'+clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(sun))+'</span>'+
@@ -718,7 +730,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
     if (!document.body.classList.contains('tab-dieta') && chipsEl.querySelector('[data-wk]')) monthChips();
     Array.prototype.forEach.call(chipsEl.children,function(b,i){
       b.setAttribute('aria-pressed', i===current);
-      if (i===current) b.scrollIntoView({block:'nearest',inline:'center'});
+      if (i===current) chipsEl.scrollLeft = Math.max(0, b.offsetLeft - chipsEl.offsetLeft); // el mes elegido queda el primero; los anteriores, escondidos a la izquierda
     });
     document.getElementById('prev').disabled = current===0;
     document.getElementById('next').disabled = current===MONTHS.length-1;
@@ -878,7 +890,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
         { name:'', entreno:['75 g de pan','50 g de pechuga de pollo','20 g de crema de cacahuete','1 plátano','60 g de aguacate','50 g de queso cottage'],
                    descanso:['50 g de pan tradicional','75 g de pechuga de pavo','75 g de aguacate','30 g de queso cottage'] } ] },
       { id:'c2', name:{ entreno:'Comida', descanso:'Comida' }, img:{ entreno:{ src:'comida.jpg', alt:'Gnocchi con ternera, verduras salteadas y piña con nueces' } },
-        alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'90 g de ternera', por:['110 g de lomo de cerdo','70 g de lomo embuchado'] }] }, ops:[
+        alt:{ entreno:[{ de:'80 g de arroz', por:['80 g de pasta','100 g de pan','160 g de gnocchi'] }, { de:'90 g de ternera', por:['110 g de lomo de cerdo','70 g de lomo embuchado'] }, { de:'100 g de piña', por:['100 g de kiwi','100 g de frutos rojos'] }] }, ops:[
         { name:'', entreno:['80 g de arroz','100 g de salteado de verduras','90 g de ternera','100 g de piña','10 g de nueces naturales'],
                    descanso:['80 g de arroz blanco o pasta (en seco)','100 g de filete de ternera','100 g de salteado de verduras','10 ml de aceite de oliva','100 g de piña natural'] } ] },
       { id:'c3', name:{ entreno:'Merienda o post entreno', descanso:'Merienda' }, img:{ entreno:{ src:'merienda.jpg', alt:'Papilla de cereales con proteína y chocolate negro' } }, ops:[
@@ -886,7 +898,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
                            descanso:['60 g de pan tradicional','60 g de jamón serrano','100 g de tomate (opcional)'] },
         { name:'Opción 2', entreno:[], descanso:[] } ] },
       { id:'c4', name:{ entreno:'Cena', descanso:'Cena' }, img:{ entreno:{ src:'cena.jpg', alt:'Fajita de pollo con verduras' } },
-        alt:{ entreno:[{ de:'50 g de arroz', por:['50 g de pasta','60 g de tortillas para fajitas (1 fajita grande)','100 g de gnocchi','200 g de patata cocida'] }, { de:'100 g de pechuga de pollo', por:['100 g de pechuga de pavo','100 g de pescado blanco (dorada, lubina…)'] }] }, ops:[
+        alt:{ entreno:[{ de:'50 g de arroz', por:['50 g de pasta','60 g de tortillas para fajitas (1 fajita grande)','100 g de gnocchi','200 g de patata cocida o boniato'] }, { de:'100 g de pechuga de pollo', por:['100 g de pechuga de pavo','100 g de pescado blanco (dorada, lubina…)'] }] }, ops:[
         { name:'', entreno:['50 g de arroz','100 g de verduras','100 g de pechuga de pollo'],
                    descanso:['250 g de patata cocida','100 g de pescado blanco (dorada, lubina…)','100 g de salteado de verduras'] } ] },
       { id:'c5', name:{ entreno:'Precama o recena', descanso:'Precama' }, img:{ entreno:{ src:'precama.jpg', alt:'Yogur griego con frutos rojos y cornflakes' } }, ops:[
@@ -922,6 +934,15 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
          MOMENTOS.map(function(o){ return '<button type="button" class="dchip" data-dwm="hambre" data-v="'+o+'" aria-pressed="'+(hm.indexOf(o)>-1)+'">'+o+'</button>'; }).join('')+'</div></div>';
     h += '<button type="button" class="btn btn-primary dsend" data-dsend>Enviar revisión</button><p class="send__status" data-dsend-st>'+(d._sent ? 'Enviado el '+d._sent+'.' : '')+'</p>';
     return h+'</div>';
+  }
+  // Foto del plan nutricional vigente: va con cada revisión para comparar calorías y peso más adelante
+  function planNutri(){
+    var I = DIETA.info, items = function(c, t){ var o = (c.ops||[]).filter(function(x){ return (x[t]||[]).length; })[0]; return o ? o[t].slice() : []; };
+    var alt = function(l){ return (l||[]).map(function(x){ return { de: x.t ? x.t.replace(/:$/,'') : 'En lugar de '+x.de, por: x.por.slice() }; }); };
+    return {
+      info: { entreno: { kcal:I.entreno.kcal, h:I.entreno.h, p:I.entreno.p, g:I.entreno.g, pct:I.pct || null } },
+      comidas: DIETA.comidas.map(function(c){ return { nombre: typeof c.name === 'string' ? c.name : c.name.entreno, entreno: items(c,'entreno'), altEntreno: alt(c.alt && c.alt.entreno) }; })
+    };
   }
   function renderDiet(){
     var type = (!DIETA.unDia && store._dtype === 'descanso') ? 'descanso' : 'entreno';
@@ -964,8 +985,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   function dWeeks(){ var a = []; MONTHS.forEach(function(m){ mondaysOf(m).forEach(function(mon){ a.push({ mon:mon, m:m }); }); }); return a; }
   function dSelIdx(W8){ var si = -1, ti = 0; W8.forEach(function(w,i){ if (store._dsel === key(w.mon)) si = i; if (today>=w.mon && today<=addDays(w.mon,6)) ti = i; }); return si > -1 ? si : ti; }
   function dietNav(W8, si){
-    chipsEl.innerHTML = W8.map(function(w,i){ var d = store['dw-'+key(w.mon)]; return '<button class="chip chip--wk" data-wk="'+key(w.mon)+'" aria-pressed="'+(i===si)+'">'+clean(fmtShort.format(w.mon))+((d&&d._sent)?' ✓':'')+'</button>'; }).join('');
-    var on = chipsEl.children[si]; if (on) on.scrollIntoView({block:'nearest',inline:'center'});
+    chipsEl.innerHTML = W8.map(function(w,i){ var d = store['dw-'+key(w.mon)]; return '<button class="chip chip--wk'+(addDays(w.mon,6) < today ? ' is-past' : '')+'" data-wk="'+key(w.mon)+'" aria-pressed="'+(i===si)+'">'+clean(fmtShort.format(w.mon))+((d&&d._sent)?' ✓':'')+'</button>'; }).join('');
+    var on = chipsEl.children[si]; if (on) chipsEl.scrollLeft = Math.max(0, on.offsetLeft - chipsEl.offsetLeft);
     document.getElementById('prev').disabled = si===0; document.getElementById('next').disabled = si===W8.length-1;
     document.querySelector('.months').setAttribute('aria-label','Semanas');
   }
@@ -999,7 +1020,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       if (pesos.length) datos.peso = pesos.join(' · ');
       if (!Object.keys(datos).length){ stEl.textContent = 'Responde al menos una pregunta antes de enviar.'; stEl.className = 'send__status err'; return; }
       var mon = W8[wi].mon;
-      var payload = { origen:'avances-entreno', tipo:'dieta', clienta:CLIENTA, plan:'Dieta', semanas:[{ mes:fmtMonthY.format(W8[wi].m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion:null, dieta:datos, entrenos:[] }] };
+      var payload = { origen:'avances-entreno', tipo:'dieta', clienta:CLIENTA, plan:'Dieta', semanas:[{ mes:fmtMonthY.format(W8[wi].m), semana:wi+1, fechas:clean(fmtShort.format(mon))+' – '+clean(fmtShort.format(addDays(mon,6))), recuperacion:null, dieta:datos, entrenos:[] }], planNutri: planNutri() };
       sb.disabled = true; stEl.className = 'send__status'; stEl.textContent = 'Enviando…';
       fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) })
       .then(function(){ var now = new Date(); q.d._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); save();
@@ -1102,8 +1123,36 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   if (store._sent) setSt('Último envío: '+store._sent+'.');
   if (store._pending) setSt('Hay avances pendientes de enviar: se mandarán solos en cuanto tengas conexión.');
   function queue(){ store._pending = 1; save(); setSt('Sin conexión: tus avances se enviarán solos en cuanto vuelvas a tener internet.'); }
-  function doSend(auto){
+  // Última semana (hasta hoy) con entrenos apuntados y sin valorar la recuperación
+  function recPendiente(){
+    var res = null;
+    MONTHS.forEach(function(m,mi){ mondaysOf(m).forEach(function(mon){
+      if (mon > today) return;
+      var has = ORDER.some(function(o){ var wk = key(mon)+'-'+o[0], log = store['r-'+wk];
+        return (log && log.v && log.v.some(function(x){ return x && x.some(function(y){ return y && (y[0]||y[1]); }); })) || store['d-'+wk]!=null || store[key(addDays(mon,o[1]))+'-'+o[0]]; });
+      if (has && store['rec-'+key(mon)]==null) res = { mi:mi, mon:mon };
+    }); });
+    return res;
+  }
+  function doSend(auto, sinRec){
     if (sending) return;
+    if (!auto && !sinRec){
+      var rp = recPendiente();
+      if (rp){
+        sendSt.className = 'send__status';
+        sendSt.innerHTML = 'No has valorado la <b>recuperación</b> de la semana del '+clean(fmtShort.format(rp.mon))+'. ¿Quieres hacerlo antes de enviar?'+
+          '<span class="rec-ask"><button type="button" class="rec-ask__go" data-recgo>Valorar ahora</button><button type="button" data-recskip>Enviar igualmente</button></span>';
+        sendSt.querySelector('[data-recskip]').onclick = function(){ doSend(false, true); };
+        sendSt.querySelector('[data-recgo]').onclick = function(){
+          setSt('Valora la recuperación y vuelve a pulsar «Enviar avances».');
+          current = rp.mi; render();
+          var wk = mainEl.querySelector('.week[data-mon="'+key(rp.mon)+'"]'); if (!wk) return;
+          if (!wk.classList.contains('is-open')) toggle(wk);
+          setTimeout(function(){ var r = wk.querySelector('.rec'); if (!r) return; r.scrollIntoView({block:'center'}); var b = r.querySelector('[data-rec]'); if (b && b.getAttribute('aria-expanded') !== 'true') b.click(); }, 450);
+        };
+        return;
+      }
+    }
     var semanas = collect();
     if (!semanas.length){ if (!auto) setSt('Todavía no has apuntado nada. Rellena algún entrenamiento y vuelve a enviar.','err'); return; }
     if (navigator.onLine === false){ queue(); return; }
@@ -1113,7 +1162,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
       body: JSON.stringify({ origen:'avances-entreno', clienta:CLIENTA, plan:'Fase de ganancia', semanas:semanas }) })
     .then(function(){
       var now = new Date();
-      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); delete store._pending; save();
+      store._sent = now.toLocaleDateString('es-ES')+' a las '+now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); store._sentTs = now.getTime(); delete store._pending; save();
+      document.getElementById('remind').hidden = true;
       setSt('¡Enviado! Tu entrenadora ya tiene tus avances. Puedes seguir apuntando y volver a enviar cuando quieras.','ok');
       sendBtn.textContent = 'Enviado ✓'; setTimeout(function(){ sendBtn.textContent = 'Enviar avances'; }, 4000);
     })
@@ -1123,6 +1173,16 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   sendBtn.addEventListener('click', function(){ doSend(false); });
   window.addEventListener('online', function(){ if (store._pending) doSend(true); });
   if (store._pending && navigator.onLine !== false) setTimeout(function(){ doSend(true); }, 1500);
+  // Recordatorio: más de 7 días sin enviar avances (cuenta desde el último envío o desde que empezó a usar la app)
+  (function(){
+    var now = Date.now(), DAY = 864e5;
+    if (!store._firstUse){ store._firstUse = now; save(); }
+    if (store._sent && !store._sentTs){ store._sentTs = now; save(); } // envíos antiguos sin fecha exacta: se empieza a contar hoy
+    var desde = store._sentTs || store._firstUse, box = document.getElementById('remind');
+    if (now - desde > 7*DAY && !store._pending && collect().length) box.hidden = false;
+    document.getElementById('remindX').addEventListener('click', function(){ box.hidden = true; });
+    document.getElementById('remindBtn').addEventListener('click', function(){ doSend(false); sendBtn.scrollIntoView({block:'center'}); });
+  })();
 
   // --- Resumen: el plan de la semana en una pantalla aparte ---
   var sum = document.createElement('div');
