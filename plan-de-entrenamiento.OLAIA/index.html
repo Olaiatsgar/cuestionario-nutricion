@@ -6,7 +6,7 @@
 <title>Plan de Olaia</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#B5546E">
+<meta name="theme-color" content="#EEE7E0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Olaia">
@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poppins:ital,wght@0,300;0,400;0,500;1,300&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Pinyon+Script&family=Poppins:ital,wght@0,300;0,400;0,500;1,300&display=swap">
 <style>
 /* Misma estética que el cuestionario inicial: marrón Roasted + rosa bebé palo · Pinyon Script + Poppins */
 :root{
@@ -428,15 +428,100 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   *{transition-duration:.01s!important;animation:none!important}
   html.anim [data-pop]{opacity:1;transform:none}
 }
+
+/* ===== Estilo «Gymshark / Alo» (borrador 2026-11-04): arena + rosa empolvado · Manrope ===== */
+:root{
+  --ink:#2B2422; --ink-2:#4A3F3B; --cream:#F6EEE8;
+  --rosa:#E9D6D2; --rosa-soft:#F1E4E0; --rosa-deep:#B9787E;
+  --bg:#EEE7E0; --bg-elevated:#F9F5F1; --bg-deep:#F3ECE6;
+  --border:#E6DCD4; --border-strong:#D8C9BF;
+  --text:#2B2422; --text-dim:#8C7E78; --text-faint:#AEA29B;
+  --accent:#9E5F66; --accent-deco:#D9AEB2;
+  --gradient:linear-gradient(135deg,#2B2422 0%,#2B2422 100%);
+  --gradient-text:linear-gradient(135deg,#9E5F66 0%,#B9787E 100%);
+  --shadow-sm:0 1px 2px rgba(43,36,34,.04);
+  --shadow-md:0 6px 18px rgba(43,36,34,.06);
+  --font-sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+html body{font-family:var(--font-sans);font-weight:400}
+html body .aurora{background:#EEE7E0}
+html body .hero::before{background:transparent}
+html body::before{background:#EEE7E0}
+html body .hero{gap:6px;padding-block:calc(34px + env(safe-area-inset-top,0px)) 18px;margin-bottom:8px}
+html body .hero .hi{margin:0;font-size:14px;font-weight:500;color:var(--text-dim)}
+html body .hero h1{font-family:var(--font-sans);font-weight:800;text-transform:none;font-size:28px;line-height:1.12;letter-spacing:-.025em;color:var(--ink)}
+html body .hero h1 em{font-style:normal;color:var(--rosa-deep)}
+html body .hero .sub{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--text-dim);font-size:12px;letter-spacing:.08em;margin-top:4px}
+html body .hero .sub__rule{display:none}
+/* ¿Qué entrenas hoy? */
+.today{margin-top:18px;display:flex;gap:6px;padding:4px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;width:max-content;max-width:100%}
+.today__b{font-size:14px;font-weight:500;padding:8px 22px;border-radius:999px;color:var(--text-dim);background:transparent;border:0;transition:background .2s,color .2s}
+.today__b:active{transform:scale(.97)}
+.today__b[aria-expanded="true"]{background:var(--gradient);color:var(--cream)}
+html body .wrap:has(> .tabs){display:none}
+body:not(.sec-open) .months,body:not(.sec-open) #month,body:not(.sec-open) #diet{display:none}
+/* Pestañas y franja */
+html body .tabs{background:var(--bg-elevated);border-color:var(--border)}
+html body .tab[aria-selected="true"]{background:var(--ink);color:var(--cream)}
+html body .months{background:rgba(238,231,224,.96);border-bottom-color:var(--border)}
+html body .months .chip{color:var(--text-dim)}
+html body .months .chip:hover{background:var(--rosa-soft);color:var(--ink)}
+html body .months .chip[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+html body .months .arrow{background:var(--bg-elevated);color:var(--ink)}
+html body .months .arrow:hover{background:var(--rosa-soft)}
+/* Tarjetas */
+html body .month__title h2{font-weight:700;text-transform:none;font-size:22px;letter-spacing:-.02em}
+html body .week,html body .dcard,html body .dfold{background:var(--bg-elevated);border:0;border-radius:24px;box-shadow:none}
+html body .week.is-open{box-shadow:var(--shadow-md)}
+html body .week__num{font-weight:700;font-size:15px;color:var(--ink);letter-spacing:.02em}
+html body .is-now{outline:1.5px solid var(--rosa-deep);outline-offset:-1.5px}
+html body .wo__name{font-weight:600;font-size:15px}
+html body .ex__name{font-weight:600}
+html body .log{background:#fff;border:0;border-radius:16px}
+html body .log input{background:var(--bg-deep);border-color:transparent;border-radius:12px;font-weight:600}
+html body .btn-primary{background:var(--rosa-deep);color:#fff;box-shadow:none}
+html body .btn-ghost{border-color:var(--ink-2)}
+html body .send__card{background:var(--bg-elevated);border:0;border-radius:24px;box-shadow:none}
+html body .send__card h2{font-weight:700;text-transform:none;letter-spacing:-.01em}
+html body .send__card .btn{background:var(--rosa-deep);color:#fff;border:0}
+html body .install{background:var(--bg-elevated);border:0;border-radius:20px}
+/* Botones − / + junto a reps y peso */
+.stp{display:flex;align-items:center;gap:4px;min-width:0}
+.stp input{flex:1}
+.stp__b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--rosa-soft);color:var(--accent);font-size:16px;font-weight:700;line-height:1;display:grid;place-items:center}
+.stp__b:active{transform:scale(.9)}
+.is-saved .stp__b{display:none}
+/* Temporizador de descanso */
+.rest{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);z-index:30;background:var(--ink);color:var(--cream);border-radius:999px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(43,36,34,.25);transition:transform .45s var(--bounce);font-family:var(--font-sans)}
+.rest.on{transform:translate(-50%,0)}
+.rest__l{font-size:12px;font-weight:600;opacity:.75}
+.rest__t{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;min-width:52px}
+.rest.done .rest__t{color:#F2C3CA}
+.rest button{background:rgba(255,255,255,.12);color:var(--cream);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700}
+.log{grid-template-columns:70px minmax(0,1fr) minmax(0,1fr)}
+/* Semana actual: oscura, como la antigua franja «¿Qué entrenas hoy?» */
+html body .week.is-now{background:linear-gradient(135deg,#E6C3C4 0%,#D3A1A6 100%);color:var(--ink);position:relative;overflow:hidden;outline:0;border:0}
+html body .week.is-now:after{content:"";position:absolute;right:-40px;top:-60px;width:170px;height:170px;border-radius:50%;background:#fff;opacity:.22;pointer-events:none}
+html body .week.is-now > *{position:relative;z-index:1}
+html body .week.is-now .now-dot{background:var(--ink)}
+html body .week.is-now .week__btn .chev{background:rgba(255,255,255,.4);color:var(--ink)}
+html body .week.is-now .wo__btn{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.75)}
+html body .week.is-now .wo .chev{background:rgba(255,255,255,.4);color:var(--ink)}
+html body .week.is-now .wo__tools button,html body .week.is-now .wo__tools .tool{background:transparent;color:var(--ink);border-color:rgba(43,36,34,.25)}
+html body .week.is-now .wo__body{background:var(--bg-elevated);color:var(--ink);border-color:transparent}
+html body .week.is-now .rec,html body .week.is-now [class*="rec"]{color:var(--ink)}
 </style>
 </head>
 <body>
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span></div>
 
 <header class="wrap hero">
-  <h1><span class="ln"><span>Plan de</span> <span class="script nm">Olaia</span></span></h1>
-  <p class="sub" data-pop style="--d:.26s"><span class="sub__rule" aria-hidden="true"></span>Registro semanal de entrenamiento y dieta</p>
+  <p class="hi" id="hi" data-pop>Hola, Olaia</p>
+  <h1 data-pop style="--d:.08s">Tu fuerza,<br><em>tu ritmo.</em></h1>
+  <p class="sub" data-pop style="--d:.16s"><span class="sub__rule" aria-hidden="true"></span>Plan de entrenamiento y dieta</p>
+  <section class="today" id="today" data-pop style="--d:.24s" aria-label="Secciones"></section>
 </header>
+<div class="rest" id="rest" role="status" aria-live="polite"><span class="rest__l">Descanso</span><span class="rest__t" id="restT">1:30</span><button type="button" id="restAdd">+30 s</button><button type="button" id="restX">Saltar</button></div>
 
 <div class="wrap"><div class="install" id="install" hidden>
   <div class="install__txt"><b>Instálala como app</b><span id="installHow"></span></div>
@@ -573,8 +658,8 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
           var lab = r.t ? (r.t===1 ? 'Serie '+r.s+'<small>tramo 1</small>' : '<small>tramo '+r.t+'</small>') : lbl;
           var ps = pv[si] || []; if (ps[0] || ps[1]) lab += '<small class="log__prev">ant.: '+esc(ps[0]||'–')+' × '+(ps[1] ? esc(ps[1])+' kg' : '–')+'</small>';
           return '<span class="log__l'+(r.t===1 && r.s>1 ? ' log__l--new' : '')+'">'+lab+'</span>'+
-            '<input type="text" inputmode="numeric" data-ex="'+i+'" data-s="'+si+'" data-f="0" value="'+esc(sv[0]||'')+'"'+ro+' placeholder="–" aria-label="'+e[0]+', '+lbl+': repeticiones">'+
-            '<input type="text" inputmode="decimal" data-ex="'+i+'" data-s="'+si+'" data-f="1" value="'+esc(sv[1]||'')+'"'+ro+' placeholder="kg" aria-label="'+e[0]+', '+lbl+': peso en kg">';
+            '<span class="stp"><button type="button" class="stp__b" data-stp="-1" aria-label="Una repetición menos">−</button><input type="text" inputmode="numeric" data-ex="'+i+'" data-s="'+si+'" data-f="0" value="'+esc(sv[0]||'')+'"'+ro+' placeholder="–" aria-label="'+e[0]+', '+lbl+': repeticiones"><button type="button" class="stp__b" data-stp="1" aria-label="Una repetición más">+</button></span>'+
+            '<span class="stp"><button type="button" class="stp__b" data-stp="-2.5" aria-label="2,5 kg menos">−</button><input type="text" inputmode="decimal" data-ex="'+i+'" data-s="'+si+'" data-f="1" value="'+esc(sv[1]||'')+'"'+ro+' placeholder="kg" aria-label="'+e[0]+', '+lbl+': peso en kg"><button type="button" class="stp__b" data-stp="2.5" aria-label="2,5 kg más">+</button></span>';
         }).join('')+'</div></div></div></li>';
     }).join('')+'</ol><p class="ex__total">Total: '+w.total+'</p>'+
       (w.tips?'<div class="tips"><span class="tips__t">Tips</span><ul>'+w.tips.map(function(t){return t.indexOf('* ')===0 ? '<li class="ast">'+t.slice(2)+'</li>' : '<li>'+t+'</li>'}).join('')+'</ul></div>':'')+
@@ -1246,7 +1331,7 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
 
   // Título letra a letra
   (function(){
-    var h = document.querySelector('h1'); if (!h) return;
+    var h = document.querySelector('h1'); if (!h || !h.querySelector('.ln')) return;
     h.setAttribute('aria-label', (h.innerText || h.textContent).replace(/\s+/g,' ').trim());
     var i = 0;
     Array.prototype.forEach.call(h.querySelectorAll('.ln > span:not(.nm)'), function(sp){
@@ -1261,6 +1346,64 @@ h1 .script.nm.lt-name{display:inline-block;transform:translateY(45%);clip-path:i
   })();
 
   render();
+
+  // ===== Estilo nuevo (borrador): saludo, tarjetas Entrenamiento / Dieta, botones − / + y temporizador de descanso =====
+  (function(){
+    var hr = new Date().getHours();
+    document.getElementById('hi').textContent = (hr < 14 ? 'Buenos días' : hr < 21 ? 'Buenas tardes' : 'Buenas noches') + ', Olaia';
+    var todayEl = document.getElementById('today');
+    function thisMonday(){ var d = new Date(today); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d; }
+    function nSeries(w){ var m = String(w.total||'').match(/(\d+)\s*series/); return m ? m[1]+' series' : ''; }
+    function renderToday(){
+      var mon = thisMonday(), hechos = ORDER.filter(function(o){ var wk = key(mon)+'-'+o[0]; return !!(store['r-'+wk] && store['r-'+wk].saved) || !!store[key(addDays(mon,o[1]))+'-'+o[0]]; }).length;
+      var open = document.body.classList.contains('sec-open'), t = document.body.classList.contains('tab-dieta') ? 'dieta' : 'entreno';
+      todayEl.innerHTML =
+        '<button type="button" class="today__b" data-go="entreno" aria-expanded="'+(open && t==='entreno')+'">Entrenamiento</button>'+
+        '<button type="button" class="today__b" data-go="dieta" aria-expanded="'+(open && t==='dieta')+'">Dieta</button>';
+    }
+    renderToday();
+    todayEl.addEventListener('click', function(e){
+      var b = e.target.closest('[data-go]'); if (!b) return;
+      var t = b.getAttribute('data-go'), cur = document.body.classList.contains('tab-dieta') ? 'dieta' : 'entreno';
+      if (document.body.classList.contains('sec-open') && cur === t){ document.body.classList.remove('sec-open'); renderToday(); return; }
+      document.body.classList.add('sec-open');
+      if (cur !== t || t === 'entreno') setTab(t);
+      renderToday();
+      var dest = t === 'dieta' ? document.getElementById('diet') : document.querySelector('.months');
+      setTimeout(function(){ dest.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+    });
+    // refresca las marcas de hecho al guardar
+    mainEl.addEventListener('click', function(e){ if (e.target.closest('[data-act]')) setTimeout(renderToday, 50); });
+
+    // − / + : reps de 1 en 1, peso de 2,5 en 2,5
+    mainEl.addEventListener('click', function(e){
+      var b = e.target.closest('[data-stp]'); if (!b) return;
+      var inp = b.parentNode.querySelector('input'); if (!inp || inp.readOnly) return;
+      var step = parseFloat(b.getAttribute('data-stp')), v = parseFloat(String(inp.value).replace(',','.'));
+      if (isNaN(v)) v = 0;
+      v = Math.max(0, Math.round((v + step)*100)/100);
+      inp.value = String(v).replace('.',',');
+      inp.dispatchEvent(new Event('input', {bubbles:true}));
+      maybeRest(inp);
+    });
+
+    // Temporizador: arranca al completar reps y peso de una serie
+    var restEl = document.getElementById('rest'), restT = document.getElementById('restT'), left = 0, tm = null, lastKey = '';
+    function fmt(t){ return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); }
+    function tick(){ left--; restT.textContent = fmt(Math.max(left,0));
+      if (left <= 0){ clearInterval(tm); tm = null; restEl.classList.add('done'); restT.textContent = '¡Vamos!';
+        try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(_){}
+        setTimeout(function(){ restEl.classList.remove('on','done'); }, 4000); } }
+    function startRest(sec){ left = sec; restEl.classList.remove('done'); restT.textContent = fmt(left); restEl.classList.add('on'); clearInterval(tm); tm = setInterval(tick, 1000); }
+    function maybeRest(inp){
+      var row = [].slice.call(inp.closest('.log').querySelectorAll('input[data-s="'+inp.getAttribute('data-s')+'"][data-ex="'+inp.getAttribute('data-ex')+'"]'));
+      if (row.length === 2 && row[0].value && row[1].value){ var k = inp.closest('.wo').getAttribute('data-wk')+'-'+inp.getAttribute('data-ex')+'-'+inp.getAttribute('data-s');
+        if (k !== lastKey){ lastKey = k; startRest(90); } }
+    }
+    mainEl.addEventListener('change', function(e){ if (e.target.matches('.log input')) maybeRest(e.target); });
+    document.getElementById('restAdd').addEventListener('click', function(){ left += 30; restT.textContent = fmt(left); if (!tm){ restEl.classList.remove('done'); tm = setInterval(tick,1000); } });
+    document.getElementById('restX').addEventListener('click', function(){ clearInterval(tm); tm = null; restEl.classList.remove('on','done'); });
+  })();
   popIn(document.querySelector('.hero'));
   Array.prototype.forEach.call(document.querySelectorAll('.send__card,.guide'), function(el){ el.setAttribute('data-pop',''); });
   popIn(document);
