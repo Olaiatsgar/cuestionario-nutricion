@@ -6,7 +6,7 @@
 <title>Plan de Olaia</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#F1DCDC">
+<meta name="theme-color" content="#D9A9AE">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Olaia">
@@ -514,9 +514,10 @@ html body .week.is-now .rec,html body .week.is-now [class*="rec"]{color:var(--in
 html body{overflow-x:clip}
 html body .hero{padding-top:0}
 html body .hero__band{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:6px;padding:calc(34px + env(safe-area-inset-top,0px)) 0 24px;margin-bottom:12px}
-html body .hero__band::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:linear-gradient(120deg,#F1DCDC 0%,#E2B9BC 55%,#CF999F 100%);z-index:-1}
+html body .hero__band::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);bottom:-70px;background:linear-gradient(to bottom,#D9A9AE 0%,#E4C1C3 35%,#EBD8D6 65%,var(--bg) 100%);z-index:-1}
 html body .hero .hi,html body .hero .sub{color:var(--ink);opacity:.75}
 html body .hero h1 em{color:var(--accent)}
+html body .hero .today{position:relative;z-index:2}
 </style>
 </head>
 <body>
