@@ -515,7 +515,9 @@ html body{overflow-x:clip}
 html body .hero{padding-top:0}
 html body .hero__band{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:6px;padding:calc(34px + env(safe-area-inset-top,0px)) 0 24px;margin-bottom:12px}
 html body .hero__band::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);bottom:-70px;background:linear-gradient(to bottom,#D9A9AE 0%,#E4C1C3 35%,#EBD8D6 65%,var(--bg) 100%);z-index:-1}
-html body .hero .hi,html body .hero .sub{color:var(--ink);opacity:.75}
+html body .hero .hi{color:var(--ink);opacity:1;font-weight:600}
+html body .hero .hi__g{color:var(--accent)}
+html body .hero .sub{color:#fff;opacity:1;font-weight:600;text-shadow:0 1px 6px rgba(120,60,70,.25)}
 html body .hero h1 em{color:var(--accent)}
 html body .hero .today{position:relative;z-index:2}
 </style>
@@ -1360,7 +1362,7 @@ html body .hero .today{position:relative;z-index:2}
   // ===== Estilo nuevo (borrador): saludo, tarjetas Entrenamiento / Dieta, botones − / + y temporizador de descanso =====
   (function(){
     var hr = new Date().getHours();
-    document.getElementById('hi').textContent = (hr < 14 ? 'Buenos días' : hr < 21 ? 'Buenas tardes' : 'Buenas noches') + ', Olaia';
+    document.getElementById('hi').innerHTML = '<span class="hi__g">'+(hr < 14 ? 'Buenos días' : hr < 21 ? 'Buenas tardes' : 'Buenas noches')+'</span>, Olaia';
     var todayEl = document.getElementById('today');
     function thisMonday(){ var d = new Date(today); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d; }
     function nSeries(w){ var m = String(w.total||'').match(/(\d+)\s*series/); return m ? m[1]+' series' : ''; }
