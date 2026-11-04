@@ -6,7 +6,7 @@
 <title>Plan de Olaia</title>
 <!-- App instalable (PWA): icono, nombre y pantalla completa al añadirla a la pantalla de inicio -->
 <link rel="manifest" href="manifest.webmanifest?v=2">
-<meta name="theme-color" content="#DDB2B5">
+<meta name="theme-color" content="#F1DCDC">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan Olaia">
@@ -510,8 +510,11 @@ html body .week.is-now .wo .chev{background:rgba(255,255,255,.4);color:var(--ink
 html body .week.is-now .wo__tools button,html body .week.is-now .wo__tools .tool{background:transparent;color:var(--ink);border-color:rgba(43,36,34,.25)}
 html body .week.is-now .wo__body{background:var(--bg-elevated);color:var(--ink);border-color:transparent}
 html body .week.is-now .rec,html body .week.is-now [class*="rec"]{color:var(--ink)}
-/* Cabecero: franja rosa como la semana actual */
-html body .hero{background:#DDB2B5;box-shadow:0 0 0 100vmax #DDB2B5;clip-path:inset(0 -100vmax);padding-bottom:24px;margin-bottom:20px}
+/* Cabecero: franja rosa en degradado encima de Entrenamiento / Dieta */
+html body{overflow-x:clip}
+html body .hero{padding-top:0}
+html body .hero__band{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:6px;padding:calc(34px + env(safe-area-inset-top,0px)) 0 24px;margin-bottom:12px}
+html body .hero__band::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:linear-gradient(120deg,#F1DCDC 0%,#E2B9BC 55%,#CF999F 100%);z-index:-1}
 html body .hero .hi,html body .hero .sub{color:var(--ink);opacity:.75}
 html body .hero h1 em{color:var(--accent)}
 </style>
@@ -520,9 +523,11 @@ html body .hero h1 em{color:var(--accent)}
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span></div>
 
 <header class="wrap hero">
+  <div class="hero__band">
   <p class="hi" id="hi" data-pop>Hola, Olaia</p>
-  <h1 data-pop style="--d:.08s">Tu fuerza,<br><em>tu ritmo.</em></h1>
+  <h1 data-pop style="--d:.08s">Tu fuerza,<br><em>tu evolución.</em></h1>
   <p class="sub" data-pop style="--d:.16s"><span class="sub__rule" aria-hidden="true"></span>Plan de entrenamiento y dieta</p>
+  </div>
   <section class="today" id="today" data-pop style="--d:.24s" aria-label="Secciones"></section>
 </header>
 <div class="rest" id="rest" role="status" aria-live="polite"><span class="rest__l">Descanso</span><span class="rest__t" id="restT">1:30</span><button type="button" id="restAdd">+30 s</button><button type="button" id="restX">Saltar</button></div>
